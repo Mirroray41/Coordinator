@@ -1,0 +1,126 @@
+package net.zapp.coordinator.helper;
+
+import net.zapp.coordinator.Coordinator;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.Map;
+
+import static net.zapp.coordinator.Coordinator.colorize;
+import static net.zapp.coordinator.Coordinator.translationManager;
+import static net.zapp.coordinator.helper.GUIHelper.itemWithData;
+
+public class GUISettingHandling {
+    public static void syncGui(Player player, Inventory chestGui) {
+        Map<String, Integer> config = Coordinator.playerConfig.get(player.getUniqueId());
+
+        int visibility = config.get("visibility");
+        int location_type = config.get("location_type");
+        int location = config.get("location");
+        int direction_type = config.get("direction_type");
+        int direction = config.get("direction");
+        int time_type = config.get("time_type");
+        int time = config.get("time");
+
+        ItemStack visibilityItem = itemWithData(new ItemStack(OnOffMaterial(visibility), 1),
+                colorize(translationManager.get("translations.gui.visibility.switch_label") + OnOff(visibility)),
+                List.of(colorize(translationManager.get("translations.gui.visibility.switch_tooltip"))));
+
+        ItemStack locationItem = itemWithData(new ItemStack(OnOffMaterial(location), 1),
+                colorize(translationManager.get("translations.gui.location.switch_label") + OnOff(location)),
+                List.of(colorize(translationManager.get("translations.gui.location.switch_tooltip"))));
+
+        ItemStack directionItem = itemWithData(new ItemStack(OnOffMaterial(direction), 1),
+                colorize(translationManager.get("translations.gui.direction.switch_label") + OnOff(direction)),
+                List.of(colorize(translationManager.get("translations.gui.direction.switch_tooltip"))));
+
+        ItemStack timeItem = itemWithData(new ItemStack(OnOffMaterial(time), 1),
+                colorize(translationManager.get("translations.gui.time.switch_label") + OnOff(time)),
+                List.of(colorize(translationManager.get("translations.gui.time.switch_tooltip"))));
+
+        ItemStack locationTypeItem = itemWithData(new ItemStack(ThreeStateMaterial(location_type), 1),
+                colorize(translationManager.get("translations.gui.location.type_selector_label")),
+                TwoStateLoreSelection(
+                        translationManager.get("translations.gui.location.type_selection_1"),
+                        translationManager.get("translations.gui.location.type_selection_2"),
+                        translationManager.get("translations.gui.selected"),
+                        translationManager.get("translations.gui.unselected"),
+                        location_type));
+
+        ItemStack directionTypeItem = itemWithData(new ItemStack(ThreeStateMaterial(direction_type), 1),
+                colorize(translationManager.get("translations.gui.direction.type_selector_label")),
+                ThreeStateLoreSelection(
+                        translationManager.get("translations.gui.direction.type_selection_1"),
+                        translationManager.get("translations.gui.direction.type_selection_2"),
+                        translationManager.get("translations.gui.direction.type_selection_3"),
+                        translationManager.get("translations.gui.selected"),
+                        translationManager.get("translations.gui.unselected"),
+                        direction_type));
+
+        ItemStack timeTypeItem = itemWithData(new ItemStack(ThreeStateMaterial(time_type), 1),
+                colorize(translationManager.get("translations.gui.time.type_selector_label")),
+                TwoStateLoreSelection(
+                        translationManager.get("translations.gui.time.type_selection_1"),
+                        translationManager.get("translations.gui.time.type_selection_2"),
+                        translationManager.get("translations.gui.selected"),
+                        translationManager.get("translations.gui.unselected"),
+                        time_type));
+
+        chestGui.setItem(10, visibilityItem);
+        chestGui.setItem(4, locationItem);
+        chestGui.setItem(6, directionItem);
+        chestGui.setItem(8, timeItem);
+
+        chestGui.setItem(13, locationTypeItem);
+        chestGui.setItem(15, directionTypeItem);
+        chestGui.setItem(17, timeTypeItem);
+    }
+
+    public static String OnOff(int i) {
+        if (i == 0) {
+            return translationManager.get("translations.gui.off_val");
+        } else {
+            return translationManager.get("translations.gui.on_val");
+        }
+    }
+
+    public static List<String> ThreeStateLoreSelection(String s1, String s2, String s3, String sel, String unsel, int i) {
+        if (i == 0) {
+            return List.of(colorize(sel + s1), colorize(unsel + s2), colorize(unsel + s3));
+        } else if (i == 1) {
+            return List.of(colorize(unsel + s1), colorize(sel + s2), colorize(unsel + s3));
+        } else {
+            return List.of(colorize(unsel + s1), colorize(unsel + s2), colorize(sel + s3));
+        }
+    }
+
+    public static List<String> TwoStateLoreSelection(String s1, String s2, String sel, String unsel, int i) {
+        if (i == 0) {
+            return List.of(colorize(sel + s1), colorize(unsel + s2));
+        }  else {
+            return List.of(colorize(unsel + s1), colorize(sel + s2));
+        }
+    }
+
+    public static Material OnOffMaterial(int i) {
+        if (i == 0) {
+            return Material.RED_STAINED_GLASS_PANE;
+        } else {
+            return Material.LIME_STAINED_GLASS_PANE;
+        }
+    }
+
+
+    public static Material ThreeStateMaterial(int i) {
+        if (i == 0) {
+            return Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+        } else if (i == 1) {
+            return Material.CYAN_STAINED_GLASS_PANE;
+        } else {
+            return Material.BLUE_STAINED_GLASS_PANE;
+        }
+    }
+}

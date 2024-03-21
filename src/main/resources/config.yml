@@ -1,0 +1,15 @@
+#DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
+file_format: 1
+
+default_settings:
+    visibility: true
+
+    direction: true
+    direction_type: 0
+    location: true
+    location_type: 0
+    time: true
+    time_type: 0
+
+#how often the bossbar refreshes for all players
+bossbar_refresh_interval: 1

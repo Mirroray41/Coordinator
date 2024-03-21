@@ -1,0 +1,10 @@
+name: coordinator
+version: '1.0'
+main: net.zapp.coordinator.Coordinator
+api-version: '1.20'
+author: "Mirroray41"
+
+commands:
+  cr:
+    description: "opens coordinator config menu"
+    #has reload sub command requiring "cr.reload" permission!
