@@ -1,5 +1,5 @@
 name: coordinator
-version: '1.0'
+version: '1.1'
 main: net.zapp.coordinator.Coordinator
 api-version: '1.20'
 author: "Mirroray41"

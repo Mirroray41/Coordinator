@@ -16,18 +16,18 @@ translations:
     off_val: " &c&nOff"
 
     visibility:
-      switch_label: "Visibility Switch:"
+      switch_label: "&fVisibility Switch:"
       switch_tooltip: "&7Switch to hide or show the bossbar"
 
     location:
-      switch_label: "Location Switch:"
+      switch_label: "&fLocation Switch:"
       switch_tooltip: "&7Switch to hide or show the location of the player"
       type_selector_label: "Location Type:"
       type_selection_1: "Whole rounded coordinates"
       type_selection_2: "Round to 2 decimal places"
 
     direction:
-      switch_label: "Direction Switch:"
+      switch_label: "&fDirection Switch:"
       switch_tooltip: "&7Switch to hide or show the direction the player is facing"
       type_selector_label: "Direction Type:"
       type_selection_1: "Cardinal direction"
@@ -35,7 +35,7 @@ translations:
       type_selection_3: "Both"
 
     time:
-      switch_label: "Time Switch:"
+      switch_label: "&fTime Switch:"
       switch_tooltip: "&7Switch to hide or show the time"
       type_selector_label: "Time Type:"
       type_selection_1: "In-game time"

@@ -1,18 +1,24 @@
 package net.zapp.coordinator.helper;
 
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
 public class GUIHelper {
-    public static ItemStack itemWithData(ItemStack stack, String name, List<String> lore) {
+    public static ItemStack itemWithData(ItemStack stack, String name, List<String> lore, boolean isEnchanted) {
         ItemMeta meta = stack.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(name);
             meta.setLore(lore);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         stack.setItemMeta(meta);
+        if (isEnchanted) {
+            stack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        }
         return stack;
     }
 

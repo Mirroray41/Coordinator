@@ -26,9 +26,9 @@ public class CrCommand implements CommandExecutor {
 
             Inventory chestGui = Bukkit.createInventory(null, 27, colorize(translationManager.get("translations.gui.title")));
 
-            ItemStack background = itemWithData(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " ");
+            ItemStack background = itemWithData(new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1), " ");
 
-            ItemStack separator = itemWithData(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " ");
+            ItemStack separator = itemWithData(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " ");
 
             ItemStack loading = itemWithData(new ItemStack(Material.RED_STAINED_GLASS_PANE, 1), colorize(translationManager.get("translations.gui.loading")));
 
