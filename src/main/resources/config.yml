@@ -1,15 +1,33 @@
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
-file_format: 1
+file_format: 2
 
 default_settings:
-    visibility: true
+    visibility:
+        is_visible: true
 
-    direction: true
-    direction_type: 0
-    location: true
-    location_type: 0
-    time: true
-    time_type: 0
+    direction:
+        is_visible: true
+        default_type: 0
+
+    location:
+        is_visible: true
+        default_type: 0
+
+    time:
+        is_visible: true
+        default_type: 0
+
+globals:
+    visibility:
+        is_enabled: true
+    direction:
+        is_enabled: true
+    location:
+        is_enabled: true
+    time:
+        is_enabled: true
 
 #how often the bossbar refreshes for all players
 bossbar_refresh_interval: 1
+
+#cr command has reload sub subcommand requiring the "cr.reload" permission

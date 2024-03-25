@@ -1,6 +1,7 @@
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
-file_format: 1
+file_format: 2
 
+#hex color support using "#001122"
 prefixes:
   location: ""
   direction: ""
@@ -14,6 +15,7 @@ translations:
     unselected: "&8● "
     on_val: " &a&nOn"
     off_val: " &c&nOff"
+    disabled: "&8Disabled "
 
     visibility:
       switch_label: "&fVisibility Switch:"

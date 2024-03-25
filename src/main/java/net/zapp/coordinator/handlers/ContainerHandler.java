@@ -9,8 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Map;
 
-import static net.zapp.coordinator.Coordinator.colorize;
-import static net.zapp.coordinator.Coordinator.translationManager;
+import static net.zapp.coordinator.Coordinator.*;
 import static net.zapp.coordinator.helper.GUIHelper.rollChoices;
 import static net.zapp.coordinator.helper.GUISettingHandling.syncGui;
 
@@ -26,13 +25,13 @@ public class ContainerHandler implements Listener {
             int slot = event.getSlot();
             Map<String, Integer> config = Coordinator.playerConfig.get(event.getWhoClicked().getUniqueId());
 
-            if (slot == 10) {
+            if (slot == 10 && plugin.getConfig().getBoolean("globals.visibility.is_enabled")) {
                 config.replace("visibility", config.get("visibility") == 0 ? 1 : 0);
-            } else if (slot == 4) {
+            } else if (slot == 4 && plugin.getConfig().getBoolean("globals.location.is_enabled")) {
                 config.replace("location", config.get("location") == 0 ? 1 : 0);
-            } else if (slot == 6) {
+            } else if (slot == 6 && plugin.getConfig().getBoolean("globals.direction.is_enabled")) {
                 config.replace("direction", config.get("direction") == 0 ? 1 : 0);
-            } else if (slot == 8) {
+            } else if (slot == 8 && plugin.getConfig().getBoolean("globals.time.is_enabled")) {
                 config.replace("time", config.get("time") == 0 ? 1 : 0);
             } else if (slot == 13) {
                 config.replace("location_type", rollChoices(config.get("location_type"), 1));

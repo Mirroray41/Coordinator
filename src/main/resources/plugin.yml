@@ -4,6 +4,8 @@ main: net.zapp.coordinator.Coordinator
 api-version: '1.20'
 author: "Mirroray41"
 
+softdepend: [PlaceholderAPI]
+
 commands:
   cr:
     description: "opens coordinator config menu"

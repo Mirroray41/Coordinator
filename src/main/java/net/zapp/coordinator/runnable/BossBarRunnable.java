@@ -5,16 +5,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static net.zapp.coordinator.Coordinator.*;
 import static net.zapp.coordinator.helper.BossBarFormatter.*;
 import static org.bukkit.Bukkit.getServer;
 
 public class BossBarRunnable extends BukkitRunnable {
+
+    public static Map<UUID, String> BossBarMap = new HashMap<>();
     @Override
     public void run() {
         for (Map.Entry<UUID, BossBar> entry : playerBossBars.entrySet()) {
@@ -57,7 +56,15 @@ public class BossBarRunnable extends BukkitRunnable {
             time = config.get("time_type") == 0 ? gameTime : realTime;
             bossBar.setColor(getColorFromYaw(player.getLocation().getYaw()));
 
-            bossBar.setTitle((config.get("location") == 1 ? " " + location + " " : "") + (config.get("direction") == 1 ? " " + direction + " " : "") + (config.get("time") == 1 ? " " + time + " " : ""));
+            String assembledTitle = (config.get("location") == 1 ? " " + location + " " : "") + (config.get("direction") == 1 ? " " + direction + " " : "") + (config.get("time") == 1 ? " " + time + " " : "");
+
+            bossBar.setTitle(assembledTitle);
+
+            if (!BossBarMap.containsKey(player.getUniqueId())) {
+                BossBarMap.put(player.getUniqueId(), assembledTitle);
+            } else {
+                BossBarMap.replace(player.getUniqueId(), assembledTitle);
+            }
         }
     }
 }

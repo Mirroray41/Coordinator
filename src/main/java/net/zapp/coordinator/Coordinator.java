@@ -6,7 +6,10 @@ import net.zapp.coordinator.handlers.ContainerHandler;
 import net.zapp.coordinator.handlers.PlayerJoinHandler;
 import net.zapp.coordinator.handlers.PlayerLeaveHandler;
 import net.zapp.coordinator.config_managers.PlayerSettingManager;
+import net.zapp.coordinator.papi.CoordinatorExpansion;
 import net.zapp.coordinator.runnable.BossBarRunnable;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,11 +18,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class Coordinator extends JavaPlugin {
 
-    private static final int CONFIG_VERSION = 1;
-    private static final int TRANSLATIONS_VERSION = 1;
+    private static final int CONFIG_VERSION = 2;
+    private static final int TRANSLATIONS_VERSION = 2;
 
     public final Logger logger = getLogger();
 
@@ -41,6 +46,8 @@ public final class Coordinator extends JavaPlugin {
 
         plugin = this;
 
+        new CoordinatorExpansion().register();
+
         saveDefaultConfig();
         reloadConfig();
 
@@ -50,10 +57,12 @@ public final class Coordinator extends JavaPlugin {
         if (getConfig().getInt("file_format") != CONFIG_VERSION) {
             logger.warning("Incorrect config format check for changes on the official github page");
             logger.warning("Coordinator requires config file format version " + CONFIG_VERSION + ", your current file format version is " + getConfig().getInt("file_format"));
+            Bukkit.getPluginManager().disablePlugin(this);
         }
         if (!Objects.equals(translationManager.get("file_format"), String.valueOf(TRANSLATIONS_VERSION))) {
             logger.warning("Incorrect config format check for changes on the official github page");
             logger.warning("Coordinator requires translations file format version " + TRANSLATIONS_VERSION + ", your current file format version is " + translationManager.get("file_format"));
+            Bukkit.getPluginManager().disablePlugin(this);
         }
 
         int interval = getConfig().getInt("bossbar_refresh_interval");
@@ -62,13 +71,13 @@ public final class Coordinator extends JavaPlugin {
         }
 
         defaultConfig = new HashMap<>() {{
-            put("visibility", getConfig().getBoolean("default_settings.visibility") ? 1 : 0);
-            put("location_type", getConfig().getInt("default_settings.location_type"));
-            put("location", getConfig().getBoolean("default_settings.location") ? 1 : 0);
-            put("direction_type", getConfig().getInt("default_settings.direction_type"));
-            put("direction", getConfig().getBoolean("default_settings.direction") ? 1 : 0);
-            put("time_type", getConfig().getInt("default_settings.time_type"));
-            put("time", getConfig().getBoolean("default_settings.time") ? 1 : 0);
+            put("visibility", getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
+            put("location_type", getConfig().getInt("default_settings.location.default_type"));
+            put("location", getConfig().getBoolean("default_settings.location.is_visible") ? 1 : 0);
+            put("direction_type", getConfig().getInt("default_settings.direction.default_type"));
+            put("direction", getConfig().getBoolean("default_settings.direction.is_visible") ? 1 : 0);
+            put("time_type", getConfig().getInt("default_settings.time.default_type"));
+            put("time", getConfig().getBoolean("default_settings.time.is_visible") ? 1 : 0);
         }};
 
 
@@ -93,21 +102,41 @@ public final class Coordinator extends JavaPlugin {
         }
     }
 
-    public static String colorize(String msg)
-    {
-        return "§r" + msg.replace("&", "§");
+    public static String colorize(String msg) {
+        return  hex("§r" + msg.replace("&", "§"));
+    }
+
+
+    // function by zwrumpy, all credit goes to him
+    public static String hex(String message) {
+        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+        Matcher matcher = pattern.matcher(message);
+        while (matcher.find()) {
+            String hexCode = message.substring(matcher.start(), matcher.end());
+            String replaceSharp = hexCode.replace('#', 'x');
+
+            char[] ch = replaceSharp.toCharArray();
+            StringBuilder builder = new StringBuilder();
+            for (char c : ch) {
+                builder.append("&").append(c);
+            }
+
+            message = message.replace(hexCode, builder.toString());
+            matcher = pattern.matcher(message);
+        }
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     public static void reload() {
         plugin.reloadConfig();
         defaultConfig = new HashMap<>() {{
-            put("visibility", plugin.getConfig().getBoolean("default_settings.visibility") ? 1 : 0);
-            put("location_type", plugin.getConfig().getInt("default_settings.location_type"));
-            put("location", plugin.getConfig().getBoolean("default_settings.location") ? 1 : 0);
-            put("direction_type", plugin.getConfig().getInt("default_settings.direction_type"));
-            put("direction", plugin.getConfig().getBoolean("default_settings.direction") ? 1 : 0);
-            put("time_type", plugin.getConfig().getInt("default_settings.time_type"));
-            put("time", plugin.getConfig().getBoolean("default_settings.time") ? 1 : 0);
+            put("visibility", plugin.getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
+            put("location_type", plugin.getConfig().getInt("default_settings.location.default_type"));
+            put("location", plugin.getConfig().getBoolean("default_settings.location.is_visible") ? 1 : 0);
+            put("direction_type", plugin.getConfig().getInt("default_settings.direction.default_type"));
+            put("direction", plugin.getConfig().getBoolean("default_settings.direction.is_visible") ? 1 : 0);
+            put("time_type", plugin.getConfig().getInt("default_settings.time.default_type"));
+            put("time", plugin.getConfig().getBoolean("default_settings.time.is_visible") ? 1 : 0);
         }};
     }
 

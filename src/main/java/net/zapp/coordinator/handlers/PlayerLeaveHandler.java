@@ -1,6 +1,7 @@
 package net.zapp.coordinator.handlers;
 
 import net.zapp.coordinator.Coordinator;
+import net.zapp.coordinator.runnable.BossBarRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +18,7 @@ public class PlayerLeaveHandler implements Listener {
         Player player = event.getPlayer();
 
         Coordinator.playerBossBars.remove(player.getUniqueId());
+        BossBarRunnable.BossBarMap.remove(player.getUniqueId());
 
         Coordinator.flushSettingsToFile();
     }
