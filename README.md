@@ -2,7 +2,7 @@ also avaible at:
 
   https://www.spigotmc.org/resources/coordinator.115735/
   
-  https://legacy.curseforge.com/minecraft/bukkit-plugins/coordinator
+  https://www.curseforge.com/minecraft/bukkit-plugins/coordinator
 
 
 ## Migration from config version 1 to 2:
