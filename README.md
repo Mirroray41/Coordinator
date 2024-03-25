@@ -5,6 +5,9 @@ also avaible at:
   https://www.curseforge.com/minecraft/bukkit-plugins/coordinator
 
 
+## Papi placeholder: %coordinator_title% -> returns bossbar title text for player
+
+
 ## Migration from config version 1 to 2:
 
 ### Replace:
