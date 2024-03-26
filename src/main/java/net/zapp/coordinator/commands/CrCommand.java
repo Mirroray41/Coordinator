@@ -18,7 +18,7 @@ import static net.zapp.coordinator.helper.GUISettingHandling.syncGui;
 public class CrCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String s, @Nonnull String[] strings ) {
-        if (strings.length == 0) {
+        if (strings.length == 0 && sender.hasPermission("cr.use")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(colorize(translationManager.get("error.cr_command_run_by_non_player")));
                 return false;
@@ -54,11 +54,13 @@ public class CrCommand implements CommandExecutor {
             ((Player) sender).openInventory(chestGui);
             return true;
         }
-        if (strings[0].equals("reload") && sender.hasPermission("cr.reload")) {
-            sender.sendMessage("reloading!");
-            reload();
-            translationManager.reloadLang();
-            return true;
+        if (strings.length != 0) {
+            if (strings[0].equals("reload") && sender.hasPermission("cr.reload")) {
+                sender.sendMessage("reloading!");
+                reload();
+                translationManager.reloadLang();
+                return true;
+            }
         }
         sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_wrong_arguments")));
         return false;

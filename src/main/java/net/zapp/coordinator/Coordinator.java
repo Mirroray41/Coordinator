@@ -46,7 +46,10 @@ public final class Coordinator extends JavaPlugin {
 
         plugin = this;
 
-        new CoordinatorExpansion().register();
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new CoordinatorExpansion().register();
+        }
+
 
         saveDefaultConfig();
         reloadConfig();

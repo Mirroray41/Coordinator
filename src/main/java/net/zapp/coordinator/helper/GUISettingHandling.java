@@ -25,22 +25,22 @@ public class GUISettingHandling {
         int time = config.get("time");
 
         ItemStack visibilityItem = itemWithData(new ItemStack(OnOffMaterial(visibility), 1),
-                colorize(plugin.getConfig().getBoolean("globals.visibility.is_enabled") ? "" : translationManager.get("translations.gui.disabled") +
+                colorize((plugin.getConfig().getBoolean("globals.visibility.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.visibility.switch_label") + OnOff(visibility)),
                 List.of(colorize(translationManager.get("translations.gui.visibility.switch_tooltip"))), true);
 
         ItemStack locationItem = itemWithData(new ItemStack(Material.MAP, 1),
-                colorize(plugin.getConfig().getBoolean("globals.location.is_enabled") ? "" : translationManager.get("translations.gui.disabled") +
+                colorize((plugin.getConfig().getBoolean("globals.location.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.location.switch_label") + OnOff(location)),
                 List.of(colorize(translationManager.get("translations.gui.location.switch_tooltip"))), location == 1);
 
         ItemStack directionItem = itemWithData(new ItemStack(Material.COMPASS, 1),
-                colorize(plugin.getConfig().getBoolean("globals.direction.is_enabled") ? "" : translationManager.get("translations.gui.disabled") +
+                colorize((plugin.getConfig().getBoolean("globals.direction.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.direction.switch_label") + OnOff(direction)),
                 List.of(colorize(translationManager.get("translations.gui.direction.switch_tooltip"))), direction == 1);
 
         ItemStack timeItem = itemWithData(new ItemStack(Material.CLOCK, 1),
-                colorize(plugin.getConfig().getBoolean("globals.time.is_enabled") ? "" : translationManager.get("translations.gui.disabled") +
+                colorize((plugin.getConfig().getBoolean("globals.time.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.time.switch_label") + OnOff(time)),
                 List.of(colorize(translationManager.get("translations.gui.time.switch_tooltip"))), time == 1);
 
