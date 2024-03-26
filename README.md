@@ -38,43 +38,45 @@ globals:
         is_enabled: true
 ```
 
-
-### Default config for reference
-```yaml
+<details>
+  <summary>Default config file for reference</summary>
+  
+  ```yaml
 file_format: 2
+  default_settings:
+      visibility:
+          is_visible: true
 
-default_settings:
-    visibility:
-        is_visible: true
+      direction:
+          is_visible: true
+          default_type: 0
 
-    direction:
-        is_visible: true
-        default_type: 0
+      location:
+          is_visible: true
+          default_type: 0
 
-    location:
-        is_visible: true
-        default_type: 0
+      time:
+          is_visible: true
+          default_type: 0
 
-    time:
-        is_visible: true
-        default_type: 0
+  globals:
+      visibility:
+          is_enabled: true
+      direction:
+          is_enabled: true
+      location:
+          is_enabled: true
+      time:
+          is_enabled: true
 
-globals:
-    visibility:
-        is_enabled: true
-    direction:
-        is_enabled: true
-    location:
-        is_enabled: true
-    time:
-        is_enabled: true
+  #how often the bossbar refreshes for all players
+  bossbar_refresh_interval: 1
 
-#how often the bossbar refreshes for all players
-bossbar_refresh_interval: 1
+  #cr command has reload sub subcommand requiring the "cr.reload" permission
+  ```
+  
+</details>
 
-#cr command has reload sub subcommand requiring the "cr.reload" permission
-
-```
 
 ## Migration from translations version 1 to 2:
 
@@ -83,8 +85,10 @@ bossbar_refresh_interval: 1
 translations:  gui:  disabled: "&8Disabled "
 ```
 
-### Default translations for reference:
-```yaml
+<details>
+  <summary>Default translations file for reference</summary>
+  
+  ```yaml
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
 file_format: 2
 
@@ -145,4 +149,6 @@ translations:
   errors:
     cr_command_run_by_non_player: "&cThis command can only be run by a player"
     cr_command_wrong_arguments: "&cUnknown arguments!"
-```
+  ```
+  
+</details>
