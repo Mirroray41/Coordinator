@@ -5,17 +5,31 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static net.zapp.coordinator.Coordinator.*;
 import static net.zapp.coordinator.helper.GUIHelper.itemWithData;
 import static net.zapp.coordinator.helper.GUISettingHandling.syncGui;
 
-public class CrCommand implements CommandExecutor {
+public class CrCommand implements CommandExecutor, TabCompleter {
+    private static final String[] FIRST = {"menu", "set", "reload"};
+    private static final String[] SET_1 = {"defaults"};
+    private static final String[] SET_2 = {"default"};
+
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String s, @Nonnull String[] strings ) {
         if (strings.length == 0 && sender.hasPermission("cr.use")) {
@@ -64,5 +78,36 @@ public class CrCommand implements CommandExecutor {
         }
         sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_wrong_arguments")));
         return false;
+    }
+
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> completions = new ArrayList<>();
+
+        List<String> playerNames = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            playerNames.add(player.getName());
+        }
+
+        if (strings.length == 1) {
+            completions = Arrays.asList(FIRST);
+        } else if (strings.length == 2 && strings[0].equals("set")) {
+            completions = Arrays.asList(SET_1);
+            completions = concat(completions, playerNames);
+        } else if (strings.length == 2 && strings[0].equals("menu")) {
+            completions = playerNames;
+        } else if (strings.length == 3 && strings[0].equals("set") && !strings[1].equals("defaults")) {
+            completions = Arrays.asList(SET_2);
+        } else if (strings.length == 4 && strings[0].equals("set") && !strings[1].equals("defaults")) {
+            completions = playerNames;
+        }
+
+
+        return completions;
+    }
+
+    private static List<String> concat(List<String> list1, List<String> list2) {
+        return List.of(Stream.concat(list1.stream(), list2.stream()).toArray(String[]::new));
     }
 }

@@ -87,6 +87,7 @@ public final class Coordinator extends JavaPlugin {
         playerConfig = playerSettingManager.convertYamlToMap(playerSettingManager.customConfigFile);
 
         Objects.requireNonNull(this.getCommand("cr")).setExecutor(new CrCommand());
+        Objects.requireNonNull(this.getCommand("cr")).setTabCompleter(new CrCommand());
 
         new PlayerJoinHandler(this);
         new PlayerLeaveHandler(this);
