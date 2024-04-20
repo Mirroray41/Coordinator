@@ -10,6 +10,7 @@ import net.zapp.coordinator.papi.CoordinatorExpansion;
 import net.zapp.coordinator.runnable.BossBarRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 public final class Coordinator extends JavaPlugin {
 
     private static final int CONFIG_VERSION = 2;
-    private static final int TRANSLATIONS_VERSION = 2;
+    private static final int TRANSLATIONS_VERSION = 3;
 
     public final Logger logger = getLogger();
 
@@ -35,6 +36,8 @@ public final class Coordinator extends JavaPlugin {
     public static Map<String, Integer> defaultConfig;
 
     public static JavaPlugin plugin;
+
+    public static boolean isLegacy = true;
 
     private static PlayerSettingManager playerSettingManager;
     public static TranslationManager translationManager;
@@ -50,6 +53,11 @@ public final class Coordinator extends JavaPlugin {
             new CoordinatorExpansion().register();
         }
 
+        int version = Integer.parseInt(Bukkit.getVersion().split("1.")[1].split("\\.")[0]);
+        isLegacy = version < 13;
+        if (isLegacy) {
+            logger.warning("legacy mode is enabled, if your server version is 1.13 or higher something went wrong, please report it to the author");
+        }
 
         saveDefaultConfig();
         reloadConfig();
@@ -73,7 +81,7 @@ public final class Coordinator extends JavaPlugin {
             interval = 1;
         }
 
-        defaultConfig = new HashMap<>() {{
+        defaultConfig = new HashMap() {{
             put("visibility", getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
             put("location_type", getConfig().getInt("default_settings.location.default_type"));
             put("location", getConfig().getBoolean("default_settings.location.is_visible") ? 1 : 0);
@@ -133,7 +141,7 @@ public final class Coordinator extends JavaPlugin {
 
     public static void reload() {
         plugin.reloadConfig();
-        defaultConfig = new HashMap<>() {{
+        defaultConfig = new HashMap() {{
             put("visibility", plugin.getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
             put("location_type", plugin.getConfig().getInt("default_settings.location.default_type"));
             put("location", plugin.getConfig().getBoolean("default_settings.location.is_visible") ? 1 : 0);

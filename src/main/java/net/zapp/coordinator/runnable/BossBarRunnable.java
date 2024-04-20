@@ -19,7 +19,9 @@ public class BossBarRunnable extends BukkitRunnable {
         for (Map.Entry<UUID, BossBar> entry : playerBossBars.entrySet()) {
             BossBar bossBar = entry.getValue();
             Player player = getServer().getPlayer(entry.getKey());
-            String location;
+            String x;
+            String y;
+            String z;
             String direction;
             String time;
             String gameTime = getFormattedTime(Objects.requireNonNull(getServer().getWorld("world")).getTime());
@@ -52,13 +54,21 @@ public class BossBarRunnable extends BukkitRunnable {
                 direction = getProperDirection(player.getLocation().getYaw()) + " " + getProperDirectionPrediction(player.getLocation().getYaw());
             }
 
-            location = config.get("location_type") == 0 ? getFormattedLocation(player.getLocation()) : getFormattedLocation2(player.getLocation());
+            x = config.get("location_type") == 0 ? getFormattedLocation((float) player.getLocation().getX()) : getFormattedLocation2((float) player.getLocation().getX());
+            y = config.get("location_type") == 0 ? getFormattedLocation((float) player.getLocation().getY()) : getFormattedLocation2((float) player.getLocation().getY());
+            z = config.get("location_type") == 0 ? getFormattedLocation((float) player.getLocation().getZ()) : getFormattedLocation2((float) player.getLocation().getZ());
             time = config.get("time_type") == 0 ? gameTime : realTime;
             bossBar.setColor(getColorFromYaw(player.getLocation().getYaw()));
 
-            String assembledTitle = (config.get("location") == 1 ? " " + location + " " : "") + (config.get("direction") == 1 ? " " + direction + " " : "") + (config.get("time") == 1 ? " " + time + " " : "");
 
-            bossBar.setTitle(assembledTitle);
+            String assembledTitle = translationManager.get("bossbar")
+                    .replace("{x}", config.get("location") == 1 ? String.valueOf(x) : "")
+                    .replace("{y}", config.get("location") == 1 ? String.valueOf(y) : "")
+                    .replace("{z}", config.get("location") == 1 ? String.valueOf(z) : "")
+                    .replace("{direction}", config.get("direction") == 1 ? direction : "")
+                    .replace("{time}", config.get("time") == 1 ? time : "");
+
+            bossBar.setTitle(colorize(assembledTitle));
 
             if (!BossBarMap.containsKey(player.getUniqueId())) {
                 BossBarMap.put(player.getUniqueId(), assembledTitle);

@@ -1,11 +1,13 @@
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
-file_format: 2
+file_format: 3
 
 #hex color support using "#001122"
 prefixes:
   location: ""
   direction: ""
   time: ""
+
+bossbar: "{x} {y} {z} {direction} {time}"
 
 translations:
   gui:
@@ -58,3 +60,6 @@ translations:
   errors:
     cr_command_run_by_non_player: "&cThis command can only be run by a player"
     cr_command_wrong_arguments: "&cUnknown arguments!"
+
+  info:
+    cr_command_reload: "&aConfiguration reloaded"

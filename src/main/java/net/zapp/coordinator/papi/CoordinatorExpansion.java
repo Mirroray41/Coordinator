@@ -6,6 +6,8 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static net.zapp.coordinator.Coordinator.plugin;
+
 public class CoordinatorExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
@@ -19,7 +21,7 @@ public class CoordinatorExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.2";
+        return plugin.getDescription().getVersion();
     }
 
     @Override

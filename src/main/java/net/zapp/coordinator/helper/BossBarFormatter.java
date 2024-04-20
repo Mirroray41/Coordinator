@@ -8,83 +8,92 @@ import static net.zapp.coordinator.Coordinator.translationManager;
 
 public class BossBarFormatter {
     public static BarColor getColorFromYaw(float rotation) {
-        rotation += 180;
-        if (rotation >= 25 && rotation < 65) {
+        float localRotation = rotation;
+        if (localRotation < 0) {
+            localRotation += 360;
+        }
+        if (localRotation >= 25 && localRotation < 65) {
             return BarColor.WHITE;
-        } else if (rotation >= 65 && rotation < 115) {
-            return BarColor.BLUE;
-        } else if (rotation >= 115 && rotation < 155) {
-            return BarColor.WHITE;
-        } else if (rotation >= 155 && rotation < 205) {
-            return BarColor.GREEN;
-        } else if (rotation >= 205 && rotation < 245) {
-            return BarColor.WHITE;
-        } else if (rotation >= 245 && rotation < 295) {
+        } else if (localRotation >= 65 && localRotation < 115) {
             return BarColor.YELLOW;
-        } else if (rotation >= 295 && rotation < 335) {
+        } else if (localRotation >= 115 && localRotation < 155) {
             return BarColor.WHITE;
-        } else if (rotation >= 335 && rotation <= 360) {
+        } else if (localRotation >= 155 && localRotation < 205) {
             return BarColor.RED;
-        } else if (rotation >= 0 && rotation < 25) {
-            return BarColor.RED;
+        } else if (localRotation >= 205 && localRotation < 245) {
+            return BarColor.WHITE;
+        } else if (localRotation >= 245 && localRotation < 295) {
+            return BarColor.BLUE;
+        } else if (localRotation >= 295 && localRotation < 335) {
+            return BarColor.WHITE;
+        } else if (localRotation >= 335 && localRotation <= 360) {
+            return BarColor.GREEN;
+        } else if (localRotation >= 0 && localRotation < 25) {
+            return BarColor.GREEN;
         } else {
             return BarColor.PURPLE;
         }
     }
 
-    public static String getFormattedLocation(Location location) {
-        return colorize(translationManager.get("prefixes.location") + Math.round(location.getX()) + "§r" + " " + translationManager.get("prefixes.location") + Math.round(location.getY()) + "§r" + " " + translationManager.get("prefixes.location") + Math.round(location.getZ()) + "§r");
+    public static String getFormattedLocation(float i) {
+        return String.valueOf(Math.round(i));
     }
 
-    public static String getFormattedLocation2(Location location) {
-        return colorize(translationManager.get("prefixes.location") + String.format("%.2f", location.getX()) + "§r" + " " + translationManager.get("prefixes.location") + String.format("%.2f", location.getY()) + "§r" + " " + translationManager.get("prefixes.location") + String.format("%.2f", location.getZ()) + "§r");
+    public static String getFormattedLocation2(float i) {
+        return String.format("%.2f", i);
     }
 
     public static String getProperDirection(float rotation) {
-        rotation += 180;
-        if (rotation >= 25 && rotation < 65) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north_east") + "§r");
-        } else if (rotation >= 65 && rotation < 115) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.east") + "§r");
-        } else if (rotation >= 115 && rotation < 155) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south_east") + "§r");
-        } else if (rotation >= 155 && rotation < 205) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south") + "§r");
-        } else if (rotation >= 205 && rotation < 245) {
+        float localRotation = rotation;
+        if (localRotation < 0) {
+            localRotation += 360;
+        }
+        if (localRotation >= 25 && localRotation < 65) {
             return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south_west") + "§r");
-        } else if (rotation >= 245 && rotation < 295) {
+        } else if (localRotation >= 65 && localRotation < 115) {
             return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.west") + "§r");
-        } else if (rotation >= 295 && rotation < 335) {
+        } else if (localRotation >= 115 && localRotation < 155) {
             return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north_west") + "§r");
-        } else if (rotation >= 335 && rotation <= 360) {
+        } else if (localRotation >= 155 && localRotation < 205) {
             return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north") + "§r");
-        } else if (rotation >= 0 && rotation < 25) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north") + "§r");
+        } else if (localRotation >= 205 && localRotation < 245) {
+            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north_east") + "§r");
+        } else if (localRotation >= 245 && localRotation < 295) {
+            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.east") + "§r");
+        } else if (localRotation >= 295 && localRotation < 335) {
+            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south_east") + "§r");
+        } else if (localRotation >= 335 && localRotation <= 360) {
+            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south") + "§r");
+        } else if (localRotation >= 0 && localRotation < 25) {
+            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south") + "§r");
         } else {
             return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.unknown") + "§r");
         }
     }
 
     public static String getProperDirectionPrediction(float rotation) {
-        rotation += 180;
-        if (rotation >= 25 && rotation < 65) {
-            return colorize(translationManager.get("prefixes.direction") + "-Z +X" + "§r");
-        } else if (rotation >= 65 && rotation < 115) {
-            return colorize(translationManager.get("prefixes.direction") + "+X" + "§r");
-        } else if (rotation >= 115 && rotation < 155) {
-            return colorize(translationManager.get("prefixes.direction") + "+Z +X" + "§r");
-        } else if (rotation >= 155 && rotation < 205) {
-            return colorize(translationManager.get("prefixes.direction") + "+Z" + "§r");
-        } else if (rotation >= 205 && rotation < 245) {
+        float localRotation = rotation;
+        if (localRotation < 0) {
+            localRotation += 360;
+        }
+        if (localRotation >= 25 && localRotation < 65) {
             return colorize(translationManager.get("prefixes.direction") + "+Z -X" + "§r");
-        } else if (rotation >= 245 && rotation < 295) {
+        } else if (localRotation >= 65 && localRotation < 115) {
             return colorize(translationManager.get("prefixes.direction") + "-X" + "§r");
-        } else if (rotation >= 295 && rotation < 335) {
+        } else if (localRotation >= 115 && localRotation < 155) {
             return colorize(translationManager.get("prefixes.direction") + "-Z -X" + "§r");
-        } else if (rotation >= 335 && rotation <= 360) {
+        } else if (localRotation >= 155 && localRotation < 205) {
             return colorize(translationManager.get("prefixes.direction") + "-Z" + "§r");
-        } else if (rotation >= 0 && rotation < 25) {
-            return colorize(translationManager.get("prefixes.direction") + "-Z" + "§r");
+        } else if (localRotation >= 205 && localRotation < 245) {
+            return colorize(translationManager.get("prefixes.direction") + "-Z +X" + "§r");
+        } else if (localRotation >= 245 && localRotation < 295) {
+            return colorize(translationManager.get("prefixes.direction") + "+X" + "§r");
+        } else if (localRotation >= 295 && localRotation < 335) {
+            return colorize(translationManager.get("prefixes.direction") + "+Z +X" + "§r");
+        } else if (localRotation >= 335 && localRotation <= 360) {
+            return colorize(translationManager.get("prefixes.direction") + "+Z" + "§r");
+        } else if (localRotation >= 0 && localRotation < 25) {
+            return colorize(translationManager.get("prefixes.direction") + "+Z" + "§r");
         } else {
             return colorize(translationManager.get("prefixes.direction") + translationManager.get("directions.unknown") + "§r");
         }

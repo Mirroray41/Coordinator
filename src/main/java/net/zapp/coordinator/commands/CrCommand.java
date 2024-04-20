@@ -9,15 +9,12 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -31,41 +28,14 @@ public class CrCommand implements CommandExecutor, TabCompleter {
     private static final String[] SET_2 = {"default"};
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String s, @Nonnull String[] strings ) {
+    public boolean onCommand( CommandSender sender,  Command command,  String s,  String[] strings ) {
         if (strings.length == 0 && sender.hasPermission("cr.use")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(colorize(translationManager.get("error.cr_command_run_by_non_player")));
                 return false;
             }
 
-            Inventory chestGui = Bukkit.createInventory(null, 27, colorize(translationManager.get("translations.gui.title")));
-
-            ItemStack background = itemWithData(new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1), " ");
-
-            ItemStack separator = itemWithData(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " ");
-
-            ItemStack loading = itemWithData(new ItemStack(Material.RED_STAINED_GLASS_PANE, 1), colorize(translationManager.get("translations.gui.loading")));
-
-            for (int i = 0; i < 27; i++) {
-                chestGui.setItem(i, background);
-            }
-
-            chestGui.setItem(10, loading);
-
-            chestGui.setItem(3, separator);
-            chestGui.setItem(12, separator);
-            chestGui.setItem(21, separator);
-
-            chestGui.setItem(4, loading);
-            chestGui.setItem(6, loading);
-            chestGui.setItem(8, loading);
-            chestGui.setItem(13, loading);
-            chestGui.setItem(15, loading);
-            chestGui.setItem(17, loading);
-
-            syncGui((Player) sender, chestGui);
-
-            ((Player) sender).openInventory(chestGui);
+            prepMenu((Player)sender);
             return true;
         }
         if (strings.length != 0) {
@@ -108,6 +78,51 @@ public class CrCommand implements CommandExecutor, TabCompleter {
     }
 
     private static List<String> concat(List<String> list1, List<String> list2) {
-        return List.of(Stream.concat(list1.stream(), list2.stream()).toArray(String[]::new));
+        return Arrays.asList(Stream.concat(list1.stream(), list2.stream()).toArray(String[]::new));
+    }
+
+    private static void prepMenu(Player sender) {
+        Inventory chestGui = Bukkit.createInventory(null, 27, colorize(translationManager.get("translations.gui.title")));
+
+        ItemStack background;
+        ItemStack separator;
+        ItemStack loading;
+
+        if (isLegacy) {
+            background = itemWithData(new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) 8), " ");
+
+            separator = itemWithData(new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) 7), " ");
+
+            loading = itemWithData(new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) 14), colorize(translationManager.get("translations.gui.loading")));
+        } else {
+            background = itemWithData(new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1), " ");
+
+            separator = itemWithData(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " ");
+
+            loading = itemWithData(new ItemStack(Material.RED_STAINED_GLASS_PANE, 1), colorize(translationManager.get("translations.gui.loading")));
+        }
+
+
+
+        for (int i = 0; i < 27; i++) {
+            chestGui.setItem(i, background);
+        }
+
+        chestGui.setItem(10, loading);
+
+        chestGui.setItem(3, separator);
+        chestGui.setItem(12, separator);
+        chestGui.setItem(21, separator);
+
+        chestGui.setItem(4, loading);
+        chestGui.setItem(6, loading);
+        chestGui.setItem(8, loading);
+        chestGui.setItem(13, loading);
+        chestGui.setItem(15, loading);
+        chestGui.setItem(17, loading);
+
+        syncGui((Player) sender, chestGui);
+
+        ((Player) sender).openInventory(chestGui);
     }
 }

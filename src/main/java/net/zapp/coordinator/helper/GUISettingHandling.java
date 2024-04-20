@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,27 +25,27 @@ public class GUISettingHandling {
         int time_type = config.get("time_type");
         int time = config.get("time");
 
-        ItemStack visibilityItem = itemWithData(new ItemStack(OnOffMaterial(visibility), 1),
+        ItemStack visibilityItem = itemWithData(OnOffItem(visibility),
                 colorize((plugin.getConfig().getBoolean("globals.visibility.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.visibility.switch_label") + OnOff(visibility)),
-                List.of(colorize(translationManager.get("translations.gui.visibility.switch_tooltip"))), true);
+                Arrays.asList(colorize(translationManager.get("translations.gui.visibility.switch_tooltip"))), true);
 
-        ItemStack locationItem = itemWithData(new ItemStack(Material.MAP, 1),
+        ItemStack locationItem = itemWithData(LegacyItem(isLegacy, new ItemStack(Material.COMPASS, 1), new ItemStack(Material.LEGACY_COMPASS, 1)),
                 colorize((plugin.getConfig().getBoolean("globals.location.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.location.switch_label") + OnOff(location)),
-                List.of(colorize(translationManager.get("translations.gui.location.switch_tooltip"))), location == 1);
+                Arrays.asList(colorize(translationManager.get("translations.gui.location.switch_tooltip"))), location == 1);
 
-        ItemStack directionItem = itemWithData(new ItemStack(Material.COMPASS, 1),
+        ItemStack directionItem = itemWithData(LegacyItem(isLegacy, new ItemStack(Material.MAP, 1), new ItemStack(Material.LEGACY_EMPTY_MAP, 1)),
                 colorize((plugin.getConfig().getBoolean("globals.direction.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.direction.switch_label") + OnOff(direction)),
-                List.of(colorize(translationManager.get("translations.gui.direction.switch_tooltip"))), direction == 1);
+                Arrays.asList(colorize(translationManager.get("translations.gui.direction.switch_tooltip"))), direction == 1);
 
-        ItemStack timeItem = itemWithData(new ItemStack(Material.CLOCK, 1),
+        ItemStack timeItem = itemWithData(LegacyItem(isLegacy, new ItemStack(Material.CLOCK, 1), new ItemStack(Material.LEGACY_WATCH, 1)),
                 colorize((plugin.getConfig().getBoolean("globals.time.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) +
                         translationManager.get("translations.gui.time.switch_label") + OnOff(time)),
-                List.of(colorize(translationManager.get("translations.gui.time.switch_tooltip"))), time == 1);
+                Arrays.asList(colorize(translationManager.get("translations.gui.time.switch_tooltip"))), time == 1);
 
-        ItemStack locationTypeItem = itemWithData(new ItemStack(ThreeStateMaterial(location_type), 1),
+        ItemStack locationTypeItem = itemWithData(ThreeStateItem(location_type),
                 colorize(translationManager.get("translations.gui.location.type_selector_label")),
                 TwoStateLoreSelection(
                         translationManager.get("translations.gui.location.type_selection_1"),
@@ -53,7 +54,7 @@ public class GUISettingHandling {
                         translationManager.get("translations.gui.unselected"),
                         location_type), false);
 
-        ItemStack directionTypeItem = itemWithData(new ItemStack(ThreeStateMaterial(direction_type), 1),
+        ItemStack directionTypeItem = itemWithData(ThreeStateItem(direction_type),
                 colorize(translationManager.get("translations.gui.direction.type_selector_label")),
                 ThreeStateLoreSelection(
                         translationManager.get("translations.gui.direction.type_selection_1"),
@@ -63,7 +64,7 @@ public class GUISettingHandling {
                         translationManager.get("translations.gui.unselected"),
                         direction_type), false);
 
-        ItemStack timeTypeItem = itemWithData(new ItemStack(ThreeStateMaterial(time_type), 1),
+        ItemStack timeTypeItem = itemWithData(ThreeStateItem(time_type),
                 colorize(translationManager.get("translations.gui.time.type_selector_label")),
                 TwoStateLoreSelection(
                         translationManager.get("translations.gui.time.type_selection_1"),
@@ -92,38 +93,54 @@ public class GUISettingHandling {
 
     public static List<String> ThreeStateLoreSelection(String s1, String s2, String s3, String sel, String unsel, int i) {
         if (i == 0) {
-            return List.of(colorize(sel + s1), colorize(unsel + s2), colorize(unsel + s3));
+            return Arrays.asList(colorize(sel + s1), colorize(unsel + s2), colorize(unsel + s3));
         } else if (i == 1) {
-            return List.of(colorize(unsel + s1), colorize(sel + s2), colorize(unsel + s3));
+            return Arrays.asList(colorize(unsel + s1), colorize(sel + s2), colorize(unsel + s3));
         } else {
-            return List.of(colorize(unsel + s1), colorize(unsel + s2), colorize(sel + s3));
+            return Arrays.asList(colorize(unsel + s1), colorize(unsel + s2), colorize(sel + s3));
         }
     }
 
     public static List<String> TwoStateLoreSelection(String s1, String s2, String sel, String unsel, int i) {
         if (i == 0) {
-            return List.of(colorize(sel + s1), colorize(unsel + s2));
+            return Arrays.asList(colorize(sel + s1), colorize(unsel + s2));
         }  else {
-            return List.of(colorize(unsel + s1), colorize(sel + s2));
+            return Arrays.asList(colorize(unsel + s1), colorize(sel + s2));
         }
     }
 
-    public static Material OnOffMaterial(int i) {
+    public static ItemStack OnOffItem(int i) {
+        ItemStack legacy;
+        ItemStack current;
         if (i == 0) {
-            return Material.LEVER;
+            legacy = new ItemStack(Material.LEGACY_LEVER, 1);
+            current = new ItemStack(Material.LEVER, 1);
         } else {
-            return Material.REDSTONE_TORCH;
+            legacy = new ItemStack(Material.LEGACY_REDSTONE_TORCH_ON, 1);
+            current = new ItemStack(Material.REDSTONE_TORCH, 1);
         }
+        return LegacyItem(isLegacy, current, legacy);
     }
 
 
-    public static Material ThreeStateMaterial(int i) {
+    public static ItemStack ThreeStateItem(int i) {
+        ItemStack legacy;
+        ItemStack current;
         if (i == 0) {
-            return Material.PINK_DYE;
+            legacy = new ItemStack(Material.LEGACY_INK_SACK, 1, (short) 8);
+            current = new ItemStack(Material.PINK_DYE, 1);
         } else if (i == 1) {
-            return Material.MAGENTA_DYE;
+            legacy = new ItemStack(Material.LEGACY_INK_SACK, 1, (short) 13);
+            current = new ItemStack(Material.MAGENTA_DYE, 1);
         } else {
-            return Material.PURPLE_DYE;
+            legacy = new ItemStack(Material.LEGACY_INK_SACK, 1, (short) 5);
+            current = new ItemStack(Material.PURPLE_DYE, 1);
         }
+        return LegacyItem(isLegacy, current, legacy);
+    }
+
+    public static ItemStack LegacyItem(boolean isLegacy, ItemStack current, ItemStack legacy) {
+        if (isLegacy) return legacy;
+        return current;
     }
 }
