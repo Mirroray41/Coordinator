@@ -1,6 +1,5 @@
 package net.zapp.coordinator.helper;
 
-import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 
 import static net.zapp.coordinator.Coordinator.colorize;
@@ -49,25 +48,25 @@ public class BossBarFormatter {
             localRotation += 360;
         }
         if (localRotation >= 25 && localRotation < 65) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south_west") + "§r");
+            return colorize(translationManager.get("translations.directions.south_west") + "§r");
         } else if (localRotation >= 65 && localRotation < 115) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.west") + "§r");
+            return colorize(translationManager.get("translations.directions.west") + "§r");
         } else if (localRotation >= 115 && localRotation < 155) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north_west") + "§r");
+            return colorize(translationManager.get("translations.directions.north_west") + "§r");
         } else if (localRotation >= 155 && localRotation < 205) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north") + "§r");
+            return colorize(translationManager.get("translations.directions.north") + "§r");
         } else if (localRotation >= 205 && localRotation < 245) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.north_east") + "§r");
+            return colorize(translationManager.get("translations.directions.north_east") + "§r");
         } else if (localRotation >= 245 && localRotation < 295) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.east") + "§r");
+            return colorize(translationManager.get("translations.directions.east") + "§r");
         } else if (localRotation >= 295 && localRotation < 335) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south_east") + "§r");
+            return colorize(translationManager.get("translations.directions.south_east") + "§r");
         } else if (localRotation >= 335 && localRotation <= 360) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south") + "§r");
+            return colorize(translationManager.get("translations.directions.south") + "§r");
         } else if (localRotation >= 0 && localRotation < 25) {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.south") + "§r");
+            return colorize(translationManager.get("translations.directions.south") + "§r");
         } else {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("translations.directions.unknown") + "§r");
+            return colorize(translationManager.get("translations.directions.unknown") + "§r");
         }
     }
 
@@ -77,25 +76,25 @@ public class BossBarFormatter {
             localRotation += 360;
         }
         if (localRotation >= 25 && localRotation < 65) {
-            return colorize(translationManager.get("prefixes.direction") + "+Z -X" + "§r");
+            return colorize("+Z -X" + "§r");
         } else if (localRotation >= 65 && localRotation < 115) {
-            return colorize(translationManager.get("prefixes.direction") + "-X" + "§r");
+            return colorize("-X" + "§r");
         } else if (localRotation >= 115 && localRotation < 155) {
-            return colorize(translationManager.get("prefixes.direction") + "-Z -X" + "§r");
+            return colorize("-Z -X" + "§r");
         } else if (localRotation >= 155 && localRotation < 205) {
-            return colorize(translationManager.get("prefixes.direction") + "-Z" + "§r");
+            return colorize("-Z" + "§r");
         } else if (localRotation >= 205 && localRotation < 245) {
-            return colorize(translationManager.get("prefixes.direction") + "-Z +X" + "§r");
+            return colorize("-Z +X" + "§r");
         } else if (localRotation >= 245 && localRotation < 295) {
-            return colorize(translationManager.get("prefixes.direction") + "+X" + "§r");
+            return colorize("+X" + "§r");
         } else if (localRotation >= 295 && localRotation < 335) {
-            return colorize(translationManager.get("prefixes.direction") + "+Z +X" + "§r");
+            return colorize("+Z +X" + "§r");
         } else if (localRotation >= 335 && localRotation <= 360) {
-            return colorize(translationManager.get("prefixes.direction") + "+Z" + "§r");
+            return colorize("+Z" + "§r");
         } else if (localRotation >= 0 && localRotation < 25) {
-            return colorize(translationManager.get("prefixes.direction") + "+Z" + "§r");
+            return colorize("+Z" + "§r");
         } else {
-            return colorize(translationManager.get("prefixes.direction") + translationManager.get("directions.unknown") + "§r");
+            return colorize(translationManager.get("directions.unknown") + "§r");
         }
     }
 
@@ -115,9 +114,9 @@ public class BossBarFormatter {
 
     private static String timeIntToString(int time) {
         if (time < 10) {
-            return translationManager.get("prefixes.time") + "0" + time + "§r";
+            return "0" + time + "§r";
         } else {
-            return translationManager.get("prefixes.time") + time + "§r";
+            return time + "§r";
         }
     }
 }

@@ -1,6 +1,7 @@
 package net.zapp.coordinator;
 
 import net.zapp.coordinator.commands.CrCommand;
+import net.zapp.coordinator.config_managers.StructureManager;
 import net.zapp.coordinator.config_managers.TranslationManager;
 import net.zapp.coordinator.handlers.ContainerHandler;
 import net.zapp.coordinator.handlers.PlayerJoinHandler;
@@ -10,7 +11,6 @@ import net.zapp.coordinator.papi.CoordinatorExpansion;
 import net.zapp.coordinator.runnable.BossBarRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,8 +24,9 @@ import java.util.regex.Pattern;
 
 public final class Coordinator extends JavaPlugin {
 
-    private static final int CONFIG_VERSION = 2;
+    private static final int CONFIG_VERSION = 3;
     private static final int TRANSLATIONS_VERSION = 3;
+    private static final int STRUCTURE_VERSION = 1;
 
     public final Logger logger = getLogger();
 
@@ -39,8 +40,11 @@ public final class Coordinator extends JavaPlugin {
 
     public static boolean isLegacy = true;
 
+    public static int timeOffset = 0;
+
     private static PlayerSettingManager playerSettingManager;
     public static TranslationManager translationManager;
+    public static StructureManager structureManager;
 
     @Override
     public void onEnable() {
@@ -64,15 +68,22 @@ public final class Coordinator extends JavaPlugin {
 
         playerSettingManager = new PlayerSettingManager(plugin, "player_settings.yml");
         translationManager = new TranslationManager(plugin, "translations.yml");
+        structureManager = new StructureManager(plugin, "gui_structure.yml");
+
 
         if (getConfig().getInt("file_format") != CONFIG_VERSION) {
-            logger.warning("Incorrect config format check for changes on the official github page");
+            logger.warning("Incorrect config format, check for changes on the official github page");
             logger.warning("Coordinator requires config file format version " + CONFIG_VERSION + ", your current file format version is " + getConfig().getInt("file_format"));
             Bukkit.getPluginManager().disablePlugin(this);
         }
         if (!Objects.equals(translationManager.get("file_format"), String.valueOf(TRANSLATIONS_VERSION))) {
-            logger.warning("Incorrect config format check for changes on the official github page");
+            logger.warning("Incorrect config format, check for changes on the official github page");
             logger.warning("Coordinator requires translations file format version " + TRANSLATIONS_VERSION + ", your current file format version is " + translationManager.get("file_format"));
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
+        if (!Objects.equals(structureManager.get("file_format"), String.valueOf(STRUCTURE_VERSION))) {
+            logger.warning("Incorrect structure format, check for changes on the official github page");
+            logger.warning("Coordinator requires gui_structure file format version " + STRUCTURE_VERSION + ", your current file format version is " + structureManager.get("file_format"));
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
@@ -80,6 +91,8 @@ public final class Coordinator extends JavaPlugin {
         if (interval < 1) {
             interval = 1;
         }
+
+        timeOffset = getConfig().getInt("time_offset");
 
         defaultConfig = new HashMap() {{
             put("visibility", getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
@@ -141,6 +154,7 @@ public final class Coordinator extends JavaPlugin {
 
     public static void reload() {
         plugin.reloadConfig();
+        timeOffset = plugin.getConfig().getInt("time_offset");
         defaultConfig = new HashMap() {{
             put("visibility", plugin.getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
             put("location_type", plugin.getConfig().getInt("default_settings.location.default_type"));

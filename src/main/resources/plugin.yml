@@ -17,5 +17,5 @@ permissions:
     op: true
   cr.set:
     op: true
-  cr.menu:
+  cr.get:
     op: true

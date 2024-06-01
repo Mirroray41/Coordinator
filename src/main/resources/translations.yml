@@ -2,48 +2,42 @@
 file_format: 3
 
 #hex color support using "#001122"
-prefixes:
-  location: ""
-  direction: ""
-  time: ""
-
 bossbar: "{x} {y} {z} {direction} {time}"
+# the "|" will get replaced on applying translations
+state: "|&c&nOff|&a&nOn|"
+select_state: "/&8●/&7●/"
 
 translations:
   gui:
     title: "Coordinator Player Settings:"
     loading: "Loading..."
-    selected: "&7● "
-    unselected: "&8● "
-    on_val: " &a&nOn"
-    off_val: " &c&nOff"
     disabled: "&8Disabled "
 
     visibility:
-      switch_label: "&fVisibility Switch:"
+      switch_label: "&fVisibility Switch: {state}"
       switch_tooltip: "&7Switch to hide or show the bossbar"
 
     location:
-      switch_label: "&fLocation Switch:"
+      switch_label: "&fLocation Switch: {state}"
       switch_tooltip: "&7Switch to hide or show the location of the player"
       type_selector_label: "Location Type:"
-      type_selection_1: "Whole rounded coordinates"
-      type_selection_2: "Round to 2 decimal places"
+      type_selection_1: "{select_state} Whole rounded coordinates"
+      type_selection_2: "{select_state} Round to 2 decimal places"
 
     direction:
-      switch_label: "&fDirection Switch:"
+      switch_label: "&fDirection Switch: {state}"
       switch_tooltip: "&7Switch to hide or show the direction the player is facing"
       type_selector_label: "Direction Type:"
-      type_selection_1: "Cardinal direction"
-      type_selection_2: "Coordinate direction"
-      type_selection_3: "Both"
+      type_selection_1: "{select_state} Cardinal direction"
+      type_selection_2: "{select_state} Coordinate direction"
+      type_selection_3: "{select_state} Both"
 
     time:
-      switch_label: "&fTime Switch:"
+      switch_label: "&fTime Switch: {state}"
       switch_tooltip: "&7Switch to hide or show the time"
       type_selector_label: "Time Type:"
-      type_selection_1: "In-game time"
-      type_selection_2: "Real time"
+      type_selection_1: "{select_state} In-game time"
+      type_selection_2: "{select_state} Real time"
 
   directions:
     north: "North"
@@ -60,6 +54,8 @@ translations:
   errors:
     cr_command_run_by_non_player: "&cThis command can only be run by a player"
     cr_command_wrong_arguments: "&cUnknown arguments!"
+    cr_command_missing_player: "&cThis player isn't online or is console or has a missing config"
+    cr_command_incorrect_parameter: "&cThe value you're trying to set doesn't exist in the player config"
 
   info:
-    cr_command_reload: "&aConfiguration reloaded"
+    cr_command_reload: "&aConfiguration reloaded!"

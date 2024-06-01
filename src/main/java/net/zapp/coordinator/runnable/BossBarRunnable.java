@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static net.zapp.coordinator.Coordinator.*;
@@ -24,14 +26,19 @@ public class BossBarRunnable extends BukkitRunnable {
             String z;
             String direction;
             String time;
-            String gameTime = getFormattedTime(Objects.requireNonNull(getServer().getWorld("world")).getTime());
+            String gameTime = getFormattedTime(getServer().getWorld("world").getTime());
 
-            long realWorldTimeMillis = System.currentTimeMillis();
+            OffsetDateTime realWorldTimeMillis = OffsetDateTime.now();
 
-            Date realWorldTime = new Date(realWorldTimeMillis);
+            OffsetDateTime adjustedTime = realWorldTimeMillis.plusHours((long) timeOffset);
+
+            // Step 3: Convert to milliseconds since the epoch
+            long millisSinceEpoch = adjustedTime.toInstant().toEpochMilli();
+
+            Date realWorldTime = new Date(millisSinceEpoch);
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            String realTime = colorize(translationManager.get("prefixes.time") + sdf.format(realWorldTime) + "§r");
+            String realTime = colorize(sdf.format(realWorldTime) + "§r");
 
             if (player == null) {
                 continue;

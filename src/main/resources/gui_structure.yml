@@ -1,0 +1,221 @@
+#DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
+file_format: 1
+
+#curly braces indicate a config reference.
+#for a list materials, you can refer to bukkit's javadoc, available at: https://helpch.at/docs/1.20/org/bukkit/Material.html(you must replace the version number for the version of minecraft you're using)
+#don't change the positions of buttons as they aren't data driven and the button won't move!
+structure: "
+{b} {b} {b} {d} {lg} {b} {dg} {b} {tg}
+{b} {v} {b} {d} {ls} {b} {ds} {b} {ts}
+{b} {b} {b} {d} {b} {b} {b} {b} {b}
+"
+
+#background
+b:
+  type: "static"
+  material: "LIGHT_GRAY_STAINED_GLASS_PANE"
+  legacy_state: 0
+  name: " "
+  lore: ""
+  enchanted: "false"
+
+#divider
+d:
+  type: "static"
+  material: "GRAY_STAINED_GLASS_PANE"
+  legacy_state: 0
+  name: " "
+  lore: ""
+  enchanted: "false"
+
+#loading (l is always a loading item that gets replaced by the gui after data is filled)
+l:
+  type: "static_translatable"
+  material: "RED_STAINED_GLASS_PANE"
+  legacy_state: 0
+  name: "translations.gui.loading"
+  lore: ""
+  enchanted: "false"
+
+#visibility switch
+v:
+  type: "two_state_switch"#dont change
+  sub_1: "{v_1}"
+  sub_2: "{v_2}"
+  change: "visibility"#dont change
+#visibility switch state 1
+v_1:
+  type: "static_translatable"
+  material: "LEVER"
+  legacy_state: 0
+  name: "translations.gui.visibility.switch_label"
+  lore: "translations.gui.visibility.switch_tooltip"
+  enchanted: "false"
+
+#visibility switch state 2
+v_2:
+  type: "static_translatable"
+  material: "REDSTONE_TORCH"
+  legacy_state: 0
+  name: "translations.gui.visibility.switch_label"
+  lore: "translations.gui.visibility.switch_tooltip"
+  enchanted: "false"
+
+#location global
+lg:
+  type: "two_state_switch"#dont change
+  sub_1: "{lg_1}"
+  sub_2: "{lg_2}"
+  change: "location"#dont change
+
+#location global state 1
+lg_1:
+  type: "static_translatable"
+  material: "MAP"
+  legacy_state: 0
+  name: "translations.gui.location.switch_label"
+  lore: "translations.gui.location.switch_tooltip"
+  enchanted: "false"
+
+#location global state 2
+lg_2:
+  type: "static_translatable"
+  material: "MAP"
+  legacy_state: 0
+  name: "translations.gui.location.switch_label"
+  lore: "translations.gui.location.switch_tooltip"
+  enchanted: "true"
+
+#location sub
+ls:
+  type: "two_state_roll"#dont change
+  sub_1: "{ls_1}"
+  sub_2: "{ls_2}"
+  change: "location_type"#dont change
+
+#location sub state 1
+ls_1:
+  type: "static_translatable"
+  material: "PURPLE_DYE"
+  legacy_state: 0
+  name: "translations.gui.location.type_selector_label"
+  lore: "translations.gui.location.type_selection_1|translations.gui.location.type_selection_2"
+  enchanted: "false"
+
+#location sub state 2
+ls_2:
+  type: "static_translatable"
+  material: "MAGENTA_DYE"
+  legacy_state: 0
+  name: "translations.gui.location.type_selector_label"
+  lore: "translations.gui.location.type_selection_1|translations.gui.location.type_selection_2"
+  enchanted: "false"
+
+#direction global
+dg:
+  type: "two_state_switch"#dont change
+  sub_1: "{dg_1}"
+  sub_2: "{dg_2}"
+  change: "direction"#dont change
+
+#direction global state 1
+dg_1:
+  type: "static_translatable"
+  material: "MAP"
+  legacy_state: 0
+  name: "translations.gui.direction.switch_label"
+  lore: "translations.gui.direction.switch_tooltip"
+  enchanted: "false"
+
+#direction global state 2
+dg_2:
+  type: "static_translatable"
+  material: "MAP"
+  legacy_state: 0
+  name: "translations.gui.direction.switch_label"
+  lore: "translations.gui.direction.switch_tooltip"
+  enchanted: "true"
+
+#direction sub
+ds:
+  type: "three_state_roll"#dont change
+  sub_1: "{ds_1}"
+  sub_2: "{ds_2}"
+  sub_3: "{ds_3}"
+  change: "direction_type"#dont change
+
+#direction sub state 1
+ds_1:
+  type: "static_translatable"
+  material: "PURPLE_DYE"
+  legacy_state: 0
+  name: "translations.gui.direction.type_selector_label"
+  lore: "translations.gui.direction.type_selection_1|translations.gui.direction.type_selection_2|translations.gui.direction.type_selection_3"
+  enchanted: "false"
+
+#direction sub state 2
+ds_2:
+  type: "static_translatable"
+  material: "MAGENTA_DYE"
+  legacy_state: 0
+  name: "translations.gui.direction.type_selector_label"
+  lore: "translations.gui.direction.type_selection_1|translations.gui.direction.type_selection_2|translations.gui.direction.type_selection_3"
+  enchanted: "false"
+
+ds_3:
+  type: "static_translatable"
+  material: "PINK_DYE"
+  legacy_state: 0
+  name: "translations.gui.direction.type_selector_label"
+  lore: "translations.gui.direction.type_selection_1|translations.gui.direction.type_selection_2|translations.gui.direction.type_selection_3"
+  enchanted: "false"
+
+#time global
+tg:
+  type: "two_state_switch"#dont change
+  sub_1: "{tg_1}"
+  sub_2: "{tg_2}"
+  change: "time"#dont change
+
+#time global state 1
+tg_1:
+  type: "static_translatable"
+  material: "MAP"
+  legacy_state: 0
+  name: "translations.gui.time.switch_label"
+  lore: "translations.gui.time.switch_tooltip"
+  enchanted: "false"
+
+#time global state 2
+tg_2:
+  type: "static_translatable"
+  material: "MAP"
+  legacy_state: 0
+  name: "translations.gui.time.switch_label"
+  lore: "translations.gui.time.switch_tooltip"
+  enchanted: "true"
+
+#time sub
+ts:
+  type: "two_state_roll"#dont change
+  sub_1: "{ts_1}"
+  sub_2: "{ts_2}"
+  change: "time_type"#dont change
+
+#time sub state 1
+ts_1:
+  type: "static_translatable"
+  material: "PURPLE_DYE"
+  legacy_state: 0
+  name: "translations.gui.time.type_selector_label"
+  lore: "translations.gui.time.type_selection_1|translations.gui.time.type_selection_2"
+  enchanted: "false"
+
+#time sub state 2
+ts_2:
+  type: "static_translatable"
+  material: "MAGENTA_DYE"
+  legacy_state: 0
+  name: "translations.gui.time.type_selector_label"
+  lore: "translations.gui.time.type_selection_1|translations.gui.time.type_selection_2"
+  enchanted: "false"

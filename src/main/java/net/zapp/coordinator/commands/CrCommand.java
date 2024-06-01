@@ -1,5 +1,6 @@
 package net.zapp.coordinator.commands;
 
+import net.zapp.coordinator.Coordinator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -13,25 +14,26 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static net.zapp.coordinator.Coordinator.*;
 import static net.zapp.coordinator.helper.GUIHelper.itemWithData;
-import static net.zapp.coordinator.helper.GUISettingHandling.syncGui;
+import static net.zapp.coordinator.helper.GUISettingHandling.syncGUI;
 
 public class CrCommand implements CommandExecutor, TabCompleter {
-    private static final String[] FIRST = {"menu", "set", "reload"};
+    private static final String[] FIRST = {"menu", "set", "get", "reload"};
     private static final String[] SET_1 = {"defaults"};
     private static final String[] SET_2 = {"default"};
+    private static final String[] INT_OPTIONS = {"0", "1", "2"};
+
+    private static final String[] OPTIONS = {"visibility", "location", "direction", "time", "location_type", "direction_type", "time_type"};
 
     @Override
-    public boolean onCommand( CommandSender sender,  Command command,  String s,  String[] strings ) {
-        if (strings.length == 0 && sender.hasPermission("cr.use")) {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] strings ) {
+        if ((strings.length == 0 || strings[0].equals("menu"))&& sender.hasPermission("cr.use")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(colorize(translationManager.get("error.cr_command_run_by_non_player")));
+                sender.sendMessage(colorize(translationManager.get("errors.cr_command_run_by_non_player")));
                 return false;
             }
 
@@ -40,10 +42,57 @@ public class CrCommand implements CommandExecutor, TabCompleter {
         }
         if (strings.length != 0) {
             if (strings[0].equals("reload") && sender.hasPermission("cr.reload")) {
-                sender.sendMessage("reloading!");
+                sender.sendMessage(colorize(translationManager.get("translations.info.cr_command_reload")));
                 reload();
                 translationManager.reloadLang();
+                structureManager.reloadStructure();
                 return true;
+            } else if (strings[0].equals("set") && sender.hasPermission("cr.set")) {
+                Map<String, Integer> config;
+                Player player = getPlayerFromCommand(strings, sender);
+                if (player == null) {
+                    sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_missing_player")));
+                    return false;
+                }
+                config = Coordinator.playerConfig.get((player.getUniqueId()));
+                if(strings[1].equals("defaults") || strings[2].equals("defaults")) {
+                    config = defaultConfig;
+                } else {
+                    if (Arrays.asList(OPTIONS).contains(strings[2])) {
+                        if (strings[3].equals("default")){
+                            config.replace(strings[2], defaultConfig.get(strings[2]));
+                        } else {
+                            config.replace(strings[2], Integer.valueOf(strings[3]));
+                        }
+                    } else {
+                        sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_incorrect_parameter")));
+                    }
+                }
+                Coordinator.playerConfig.replace(player.getUniqueId(), config);
+                return true;
+            } else if (strings[0].equals("get") && sender.hasPermission("cr.get")) {
+                if (strings.length == 1) {
+                    sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_wrong_arguments")));
+                    return false;
+                }
+                Map<String, Integer> config;
+                Player player = getPlayerFromCommand(strings, sender);
+                if (player == null) {
+                    sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_missing_player")));
+                    return false;
+                }
+                config = Coordinator.playerConfig.get((player.getUniqueId()));
+                if (strings.length == 2) {
+                    sender.sendMessage(config.toString()
+                            .replace("{", "")
+                            .replace("}", "")
+                            .replace("=", " = ")
+                            .replace(", ", "\n"));
+                    return true;
+                } else if (Arrays.asList(OPTIONS).contains(strings[2])) {
+                    sender.sendMessage(strings[2] + " = " + config.get(strings[2]));
+                    return true;
+                }
             }
         }
         sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_wrong_arguments")));
@@ -65,12 +114,16 @@ public class CrCommand implements CommandExecutor, TabCompleter {
         } else if (strings.length == 2 && strings[0].equals("set")) {
             completions = Arrays.asList(SET_1);
             completions = concat(completions, playerNames);
-        } else if (strings.length == 2 && strings[0].equals("menu")) {
+        } else if (strings.length == 2 && strings[0].equals("get")) {
             completions = playerNames;
-        } else if (strings.length == 3 && strings[0].equals("set") && !strings[1].equals("defaults")) {
+        } else if (strings.length == 3 && (strings[0].equals("set") && !strings[1].equals("defaults"))) {
+            completions = Arrays.asList(OPTIONS);
+            completions = concat(completions, Arrays.asList(SET_1));
+        } else if (strings.length == 3 && strings[0].equals("get")) {
+            completions = Arrays.asList(OPTIONS);
+        } else if (strings.length == 4 && strings[0].equals("set") && !strings[1].equals("defaults") && !strings[2].equals("defaults")) {
             completions = Arrays.asList(SET_2);
-        } else if (strings.length == 4 && strings[0].equals("set") && !strings[1].equals("defaults")) {
-            completions = playerNames;
+            completions = concat(completions, Arrays.asList(INT_OPTIONS));
         }
 
 
@@ -84,45 +137,30 @@ public class CrCommand implements CommandExecutor, TabCompleter {
     private static void prepMenu(Player sender) {
         Inventory chestGui = Bukkit.createInventory(null, 27, colorize(translationManager.get("translations.gui.title")));
 
-        ItemStack background;
-        ItemStack separator;
-        ItemStack loading;
-
-        if (isLegacy) {
-            background = itemWithData(new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) 8), " ");
-
-            separator = itemWithData(new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) 7), " ");
-
-            loading = itemWithData(new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) 14), colorize(translationManager.get("translations.gui.loading")));
-        } else {
-            background = itemWithData(new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1), " ");
-
-            separator = itemWithData(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " ");
-
-            loading = itemWithData(new ItemStack(Material.RED_STAINED_GLASS_PANE, 1), colorize(translationManager.get("translations.gui.loading")));
-        }
-
 
 
         for (int i = 0; i < 27; i++) {
-            chestGui.setItem(i, background);
+            chestGui.setItem(i, itemWithData(new ItemStack(Material.valueOf(structureManager.get("l.material")), 1), colorize(translationManager.get(structureManager.get("l.name")))));
         }
 
-        chestGui.setItem(10, loading);
+        syncGUI(sender, chestGui);
 
-        chestGui.setItem(3, separator);
-        chestGui.setItem(12, separator);
-        chestGui.setItem(21, separator);
+        sender.openInventory(chestGui);
+    }
 
-        chestGui.setItem(4, loading);
-        chestGui.setItem(6, loading);
-        chestGui.setItem(8, loading);
-        chestGui.setItem(13, loading);
-        chestGui.setItem(15, loading);
-        chestGui.setItem(17, loading);
-
-        syncGui((Player) sender, chestGui);
-
-        ((Player) sender).openInventory(chestGui);
+    private Player getPlayerFromCommand(String[] strings, CommandSender sender) {
+        Player player;
+        if (!strings[1].equals("defaults")) {
+            player = Bukkit.getPlayer(strings[1]);
+            if (player != null) {
+                if (!Coordinator.playerConfig.containsKey((player.getUniqueId()))) {
+                    return null;
+                }
+            }
+        } else {
+            if (!(sender instanceof Player)) return null;
+            player = (Player) sender;
+        }
+        return player;
     }
 }

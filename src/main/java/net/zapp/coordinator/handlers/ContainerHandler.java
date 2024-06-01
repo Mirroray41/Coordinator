@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static net.zapp.coordinator.Coordinator.*;
 import static net.zapp.coordinator.helper.GUIHelper.rollChoices;
-import static net.zapp.coordinator.helper.GUISettingHandling.syncGui;
+import static net.zapp.coordinator.helper.GUISettingHandling.syncGUI;
 
 public class ContainerHandler implements Listener {
     public ContainerHandler(Coordinator plugin) {
@@ -43,7 +43,7 @@ public class ContainerHandler implements Listener {
                 return;
             }
 
-            syncGui((Player) event.getWhoClicked(), event.getInventory());
+            syncGUI((Player) event.getWhoClicked(), event.getInventory());
 
             Coordinator.playerConfig.replace(event.getWhoClicked().getUniqueId(), config);
         }

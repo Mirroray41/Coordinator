@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import static net.zapp.coordinator.Coordinator.plugin;
 import static org.bukkit.Bukkit.getLogger;
 
-public class TranslationManager {
+public class StructureManager {
     public File customConfigFile;
     private YamlConfiguration customConfig;
 
@@ -17,7 +17,7 @@ public class TranslationManager {
 
     String fileName;
 
-    public TranslationManager(JavaPlugin plugin, String fileName) {
+    public StructureManager(JavaPlugin plugin, String fileName) {
         this.fileName = fileName;
         customConfigFile = new File(plugin.getDataFolder(), fileName);
         if (!customConfigFile.exists()) {
@@ -26,18 +26,7 @@ public class TranslationManager {
         customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
     }
 
-
     public String get(String path) {
-        Object obj = customConfig.get(path);
-        if (obj == null) {
-            logger.warning("Missing translation at: " +  path);
-            return "";
-        }
-        return obj.toString().replace("{state}", nonReplaceGet("state"))
-                .replace("{select_state}", nonReplaceGet("select_state"));
-    }
-
-    private String nonReplaceGet(String path) {
         Object obj = customConfig.get(path);
         if (obj == null) {
             logger.warning("Missing translation at: " +  path);
@@ -46,7 +35,9 @@ public class TranslationManager {
         return obj.toString();
     }
 
-    public void reloadLang() {
+
+
+    public void reloadStructure() {
         customConfigFile = new File(plugin.getDataFolder(), fileName);
         if (!customConfigFile.exists()) {
             plugin.saveResource(fileName, false);
