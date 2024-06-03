@@ -21,7 +21,7 @@ legacy: false
   
   ```yaml
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
-file_format: 3
+file_format: 4
 
 default_settings:
     visibility:
