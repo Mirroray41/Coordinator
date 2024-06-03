@@ -57,8 +57,8 @@ public final class Coordinator extends JavaPlugin {
             new CoordinatorExpansion().register();
         }
 
-        int version = Integer.parseInt(Bukkit.getVersion().split("1.")[1].split("\\.")[0]);
-        isLegacy = version < 13;
+
+        isLegacy = getConfig().getBoolean("legacy");
         if (isLegacy) {
             logger.warning("legacy mode is enabled, if your server version is 1.13 or higher something went wrong, please report it to the author");
         }
