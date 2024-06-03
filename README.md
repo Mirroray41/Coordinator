@@ -10,6 +10,56 @@ also avaible at:
 
 ## Papi placeholder: %coordinator_title% -> returns bossbar title text for player
 
+## Migration from config version 3 to 4:
+
+### Add:
+```
+legacy: false
+```
+<details>
+  <summary>Default config file for reference</summary>
+  
+  ```yaml
+#DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
+file_format: 4
+
+default_settings:
+    visibility:
+        is_visible: true
+
+    direction:
+        is_visible: true
+        default_type: 0
+
+    location:
+        is_visible: true
+        default_type: 0
+
+    time:
+        is_visible: true
+        default_type: 0
+
+globals:
+    visibility:
+        is_enabled: true
+    direction:
+        is_enabled: true
+    location:
+        is_enabled: true
+    time:
+        is_enabled: true
+
+legacy: false
+#time zone offset from the timezone of the server host
+time_offset: 0
+#how often the bossbar refreshes for all players
+bossbar_refresh_interval: 1
+
+#cr command has reload sub subcommand requiring the "cr.reload" permission
+  ```
+  
+</details>
+
 ## Migration from config version 2 to 3:
 
 ### Add:
