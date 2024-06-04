@@ -10,6 +10,13 @@ also avaible at:
 
 ## Papi placeholder: %coordinator_title% -> returns bossbar title text for player
 
+## Migration from translation version 3 to 4:
+
+### Modify:
+```
+"{x} {y} {z} {direction} {time}" -> "{x} {y} {z} {direction} {HH}:{MM}"
+```
+
 ## Migration from config version 3 to 4:
 
 ### Add:
