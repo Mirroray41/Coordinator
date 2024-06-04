@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public final class Coordinator extends JavaPlugin {
 
     private static final int CONFIG_VERSION = 4;
-    private static final int TRANSLATIONS_VERSION = 3;
+    private static final int TRANSLATIONS_VERSION = 4;
     private static final int STRUCTURE_VERSION = 1;
 
     public final Logger logger = getLogger();
@@ -128,7 +128,7 @@ public final class Coordinator extends JavaPlugin {
     }
 
     public static String colorize(String msg) {
-        return  hex("§r" + msg.replace("&", "§"));
+        return hex(msg.replace("&", "§"));
     }
 
 

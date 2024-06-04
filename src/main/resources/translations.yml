@@ -1,9 +1,9 @@
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
-file_format: 3
+file_format: 4
 
 #hex color support using "#001122"
-bossbar: "{x} {y} {z} {direction} {time}"
-# the "|" will get replaced on applying translations
+bossbar: "{x} {y} {z} {direction} {HH}:{MM}"
+# the "|", "/" will get replaced on applying translations
 state: "|&c&nOff|&a&nOn|"
 select_state: "/&8●/&7●/"
 
