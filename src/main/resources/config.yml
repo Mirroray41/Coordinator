@@ -1,5 +1,5 @@
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
-file_format: 4
+file_format: 5
 
 default_settings:
     visibility:
@@ -26,6 +26,20 @@ globals:
         is_enabled: true
     time:
         is_enabled: true
+
+# colors available are: RED, YELLOW, GREEN, BLUE, PURPLE, WHITE
+style:
+    north: RED
+    north_east: WHITE
+    east: YELLOW
+    south_east: WHITE
+    south: GREEN
+    south_west: WHITE
+    west: BLUE
+    north_west: WHITE
+
+    unknown: PURPLE
+
 
 legacy: false
 #time zone offset from the timezone of the server host

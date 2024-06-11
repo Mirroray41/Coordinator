@@ -16,13 +16,14 @@ public class GUISettingHandling {
     public static void syncGUI(Player sender, Inventory chestGUI) {
         String struct = structureManager.get("structure").replaceFirst(" ","");
         String[] keys = struct.replace("{", "").replace("}", "").split(" ");
+
         int state = 0;
 
         Map<String, Integer> config = Coordinator.playerConfig.get(sender.getUniqueId());
 
         for (int i = 0; i < 27; i++) {
             String key = keys[i];
-
+            String parentKey = key;
             String type = structureManager.get(key + ".type");
             if (type.equals("two_state_switch") || type.equals("two_state_roll")) {
                 state = config.get(structureManager.get(key + ".change"));
@@ -42,18 +43,18 @@ public class GUISettingHandling {
                     key = formatKey(structureManager.get(key + ".sub_3"));
                 }
             }
-            typeToGUIItem(chestGUI, key, i, state);
+            typeToGUIItem(chestGUI, key, parentKey, i, state);
         }
     }
 
-    protected static void typeToGUIItem(Inventory chestGUI, String key, int slot, int state) {
-        String type = structureManager.get(key + ".type");
-        Material material = Material.valueOf(structureManager.get(key + ".material"));
+    protected static void typeToGUIItem(Inventory chestGUI, String childKey, String parentKey, int slot, int state) {
+        String type = structureManager.get(childKey + ".type");
+        Material material = Material.valueOf(structureManager.get(childKey + ".material"));
 
         String name;
-        String[] loreKeys = structureManager.get(key + ".lore").split("\\|");
+        String[] loreKeys = structureManager.get(childKey + ".lore").split("\\|");
         List<String> lore = new java.util.ArrayList<>();
-        if (!structureManager.get(key + ".lore").isEmpty()) {
+        if (!structureManager.get(childKey + ".lore").isEmpty()) {
             for (String loreKey: loreKeys) {
                 lore.add(translationManager.get(loreKey));
             }
@@ -61,10 +62,10 @@ public class GUISettingHandling {
 
         switch (type) {
             case "static":
-                name = structureManager.get(key + ".name");
+                name =  structureManager.get(childKey + ".name");
                 break;
             case "static_translatable":
-                name = translationManager.get(structureManager.get(key + ".name"));
+                name = translationManager.get(structureManager.get(childKey + ".name"));
                 break;
             default:
                 name = " ";
@@ -107,11 +108,24 @@ public class GUISettingHandling {
             }
             lore.set(i, colorize(lore.get(i)));
         }
+
+        if (structureManager.has(parentKey + ".change")) {
+            if (structureManager.get(parentKey + ".change").equals("visibility")) {
+                name = (config.getBoolean("globals.visibility.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) + name;
+            } else if (structureManager.get(parentKey + ".change").equals("direction")) {
+                name = (config.getBoolean("globals.direction.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) + name;
+            } else if (structureManager.get(parentKey + ".change").equals("location")) {
+                name = (config.getBoolean("globals.location.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) + name;
+            } else if (structureManager.get(parentKey + ".change").equals("time")) {
+                name = (config.getBoolean("globals.time.is_enabled") ? "" : translationManager.get("translations.gui.disabled")) + name;
+            }
+        }
+
         name = colorize(name);
         if (isLegacy) {
-            chestGUI.setItem(slot, itemWithData(new ItemStack(material, 1, Short.parseShort(structureManager.get(key + ".legacy_state"))), name, lore, structureManager.get(key+".enchanted").equals("true")));
+            chestGUI.setItem(slot, itemWithData(new ItemStack(material, 1, Short.parseShort(structureManager.get(childKey + ".legacy_state"))), name, lore, structureManager.get(childKey+".enchanted").equals("true")));
         } else {
-            chestGUI.setItem(slot, itemWithData(new ItemStack(material, 1), name, lore, structureManager.get(key+".enchanted").equals("true")));
+            chestGUI.setItem(slot, itemWithData(new ItemStack(material, 1), name, lore, structureManager.get(childKey+".enchanted").equals("true")));
         }
 
     }

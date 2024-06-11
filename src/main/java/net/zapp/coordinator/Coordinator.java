@@ -12,6 +12,7 @@ import net.zapp.coordinator.runnable.BossBarRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 
 public final class Coordinator extends JavaPlugin {
 
-    private static final int CONFIG_VERSION = 4;
+    private static final int CONFIG_VERSION = 5;
     private static final int TRANSLATIONS_VERSION = 4;
     private static final int STRUCTURE_VERSION = 1;
 
@@ -42,6 +43,8 @@ public final class Coordinator extends JavaPlugin {
 
     public static int timeOffset = 0;
 
+    public static FileConfiguration config;
+
     private static PlayerSettingManager playerSettingManager;
     public static TranslationManager translationManager;
     public static StructureManager structureManager;
@@ -56,6 +59,8 @@ public final class Coordinator extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new CoordinatorExpansion().register();
         }
+
+        config = plugin.getConfig();
 
 
         isLegacy = getConfig().getBoolean("legacy");

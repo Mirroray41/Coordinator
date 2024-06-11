@@ -121,7 +121,7 @@ dg:
 #direction global state 1
 dg_1:
   type: "static_translatable"
-  material: "MAP"
+  material: "COMPASS"
   legacy_state: 0
   name: "translations.gui.direction.switch_label"
   lore: "translations.gui.direction.switch_tooltip"
@@ -130,7 +130,7 @@ dg_1:
 #direction global state 2
 dg_2:
   type: "static_translatable"
-  material: "MAP"
+  material: "COMPASS"
   legacy_state: 0
   name: "translations.gui.direction.switch_label"
   lore: "translations.gui.direction.switch_tooltip"
@@ -180,7 +180,7 @@ tg:
 #time global state 1
 tg_1:
   type: "static_translatable"
-  material: "MAP"
+  material: "CLOCK"
   legacy_state: 0
   name: "translations.gui.time.switch_label"
   lore: "translations.gui.time.switch_tooltip"
@@ -189,7 +189,7 @@ tg_1:
 #time global state 2
 tg_2:
   type: "static_translatable"
-  material: "MAP"
+  material: "CLOCK"
   legacy_state: 0
   name: "translations.gui.time.switch_label"
   lore: "translations.gui.time.switch_tooltip"

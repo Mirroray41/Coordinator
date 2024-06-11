@@ -2,8 +2,7 @@ package net.zapp.coordinator.helper;
 
 import org.bukkit.boss.BarColor;
 
-import static net.zapp.coordinator.Coordinator.colorize;
-import static net.zapp.coordinator.Coordinator.translationManager;
+import static net.zapp.coordinator.Coordinator.*;
 
 public class BossBarFormatter {
     public static BarColor getColorFromYaw(float rotation) {
@@ -12,25 +11,25 @@ public class BossBarFormatter {
             localRotation += 360;
         }
         if (localRotation >= 25 && localRotation < 65) {
-            return BarColor.WHITE;
+            return BarColor.valueOf(config.getString("style.south_west"));
         } else if (localRotation >= 65 && localRotation < 115) {
-            return BarColor.YELLOW;
+            return BarColor.valueOf(config.getString("style.west"));
         } else if (localRotation >= 115 && localRotation < 155) {
-            return BarColor.WHITE;
+            return BarColor.valueOf(config.getString("style.north_west"));
         } else if (localRotation >= 155 && localRotation < 205) {
-            return BarColor.RED;
+            return BarColor.valueOf(config.getString("style.north"));
         } else if (localRotation >= 205 && localRotation < 245) {
-            return BarColor.WHITE;
+            return BarColor.valueOf(config.getString("style.north_east"));
         } else if (localRotation >= 245 && localRotation < 295) {
-            return BarColor.BLUE;
+            return BarColor.valueOf(config.getString("style.east"));
         } else if (localRotation >= 295 && localRotation < 335) {
-            return BarColor.WHITE;
+            return BarColor.valueOf(config.getString("style.south_east"));
         } else if (localRotation >= 335 && localRotation <= 360) {
-            return BarColor.GREEN;
+            return BarColor.valueOf(config.getString("style.south"));
         } else if (localRotation >= 0 && localRotation < 25) {
-            return BarColor.GREEN;
+            return BarColor.valueOf(config.getString("style.south_west"));
         } else {
-            return BarColor.PURPLE;
+            return BarColor.valueOf(config.getString("style.unknown"));
         }
     }
 

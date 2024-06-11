@@ -29,10 +29,18 @@ public class StructureManager {
     public String get(String path) {
         Object obj = customConfig.get(path);
         if (obj == null) {
-            logger.warning("Missing translation at: " +  path);
+            logger.warning("Missing structure statement at: " +  path);
             return "";
         }
         return obj.toString();
+    }
+
+    public boolean has(String path) {
+        Object obj = customConfig.get(path);
+        if (obj == null) {
+            return false;
+        }
+        return true;
     }
 
 
