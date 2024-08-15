@@ -1,5 +1,8 @@
 package net.zapp.coordinator.runnable;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -37,7 +40,6 @@ public class BossBarRunnable extends BukkitRunnable {
 
             OffsetDateTime adjustedTime = realWorldTimeMillis.plusHours((long) timeOffset);
 
-            // Step 3: Convert to milliseconds since the epoch
             long millisSinceEpoch = adjustedTime.toInstant().toEpochMilli();
 
             Date realWorldTime = new Date(millisSinceEpoch);
@@ -53,9 +55,9 @@ public class BossBarRunnable extends BukkitRunnable {
 
             Map<String, Integer> config = playerConfig.get(player.getUniqueId());
 
-            if(config.get("visibility") == 0) {
+            if(config.get("visibility") == 0 || plugin.getConfig().getBoolean("hotbar")) {
                 bossBar.setVisible(false);
-                continue;
+                if (config.get("visibility") == 0) continue;
             } else {
                 bossBar.setVisible(true);
             }
@@ -73,7 +75,7 @@ public class BossBarRunnable extends BukkitRunnable {
             z = config.get("location_type") == 0 ? getFormattedLocation((float) player.getLocation().getZ()) : getFormattedLocation2((float) player.getLocation().getZ());
             minutes = config.get("time_type") == 0 ? gameMinutes : realTimeMinutes;
             hours = config.get("time_type") == 0 ? gameHours : realTimeHours;
-            bossBar.setColor(getColorFromYaw(player.getLocation().getYaw()));
+
 
 
             String assembledTitle = translationManager.get("bossbar")
@@ -96,12 +98,20 @@ public class BossBarRunnable extends BukkitRunnable {
             assembledTitle = assembledTitle.replace("{HH}", config.get("time") == 1 ? hours : "")
                     .replace("{MM}", config.get("time") == 1 ? minutes : "");
 
+            bossBar.setColor(getColorFromYaw(player.getLocation().getYaw()));
             bossBar.setTitle(colorize(assembledTitle));
 
             if (!BossBarMap.containsKey(player.getUniqueId())) {
                 BossBarMap.put(player.getUniqueId(), assembledTitle);
             } else {
                 BossBarMap.replace(player.getUniqueId(), assembledTitle);
+            }
+
+            if (plugin.getConfig().getBoolean("hotbar")) {
+                if (config.get("visibility") == 1) {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
+                            ChatColor.valueOf(getColorFromYaw(player.getLocation().getYaw()).toString()) + colorize(assembledTitle)));
+                }
             }
         }
     }

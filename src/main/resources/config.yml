@@ -1,5 +1,5 @@
 #DO NOT CHANGE THE FILE FORMAT VERSION WITHOUT KNOWING WHAT YOU'RE DOING!
-file_format: 5
+file_format: 6
 
 default_settings:
     visibility:
@@ -40,6 +40,8 @@ style:
 
     unknown: PURPLE
 
+
+hotbar: false
 
 legacy: false
 #time zone offset from the timezone of the server host
