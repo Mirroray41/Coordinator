@@ -27,7 +27,7 @@ public class TranslationManager {
     }
 
 
-    public String get(String path) {
+    public String getStringWithReplace(String path) {
         Object obj = customConfig.get(path);
         if (obj == null) {
             logger.warning("Missing translation at: " +  path);
@@ -52,5 +52,8 @@ public class TranslationManager {
             plugin.saveResource(fileName, false);
         }
         customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
+    }
+
+    public void reload(JavaPlugin plugin) {
     }
 }

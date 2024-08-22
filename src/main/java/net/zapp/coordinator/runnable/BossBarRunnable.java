@@ -78,7 +78,7 @@ public class BossBarRunnable extends BukkitRunnable {
 
 
 
-            String assembledTitle = translationManager.get("bossbar")
+            String assembledTitle = translationManager.getString("bossbar")
                     .replace("{x}", config.get("location") == 1 ? String.valueOf(x) : "")
                     .replace("{y}", config.get("location") == 1 ? String.valueOf(y) : "")
                     .replace("{z}", config.get("location") == 1 ? String.valueOf(z) : "")

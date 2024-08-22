@@ -47,25 +47,25 @@ public class BossBarFormatter {
             localRotation += 360;
         }
         if (localRotation >= 25 && localRotation < 65) {
-            return colorize(translationManager.get("translations.directions.south_west"));
+            return colorize(translationManager.getString("translations.directions.south_west"));
         } else if (localRotation >= 65 && localRotation < 115) {
-            return colorize(translationManager.get("translations.directions.west"));
+            return colorize(translationManager.getString("translations.directions.west"));
         } else if (localRotation >= 115 && localRotation < 155) {
-            return colorize(translationManager.get("translations.directions.north_west"));
+            return colorize(translationManager.getString("translations.directions.north_west"));
         } else if (localRotation >= 155 && localRotation < 205) {
-            return colorize(translationManager.get("translations.directions.north"));
+            return colorize(translationManager.getString("translations.directions.north"));
         } else if (localRotation >= 205 && localRotation < 245) {
-            return colorize(translationManager.get("translations.directions.north_east"));
+            return colorize(translationManager.getString("translations.directions.north_east"));
         } else if (localRotation >= 245 && localRotation < 295) {
-            return colorize(translationManager.get("translations.directions.east"));
+            return colorize(translationManager.getString("translations.directions.east"));
         } else if (localRotation >= 295 && localRotation < 335) {
-            return colorize(translationManager.get("translations.directions.south_east"));
+            return colorize(translationManager.getString("translations.directions.south_east"));
         } else if (localRotation >= 335 && localRotation <= 360) {
-            return colorize(translationManager.get("translations.directions.south"));
+            return colorize(translationManager.getString("translations.directions.south"));
         } else if (localRotation >= 0 && localRotation < 25) {
-            return colorize(translationManager.get("translations.directions.south"));
+            return colorize(translationManager.getString("translations.directions.south"));
         } else {
-            return colorize(translationManager.get("translations.directions.unknown"));
+            return colorize(translationManager.getString("translations.directions.unknown"));
         }
     }
 
@@ -93,7 +93,7 @@ public class BossBarFormatter {
         } else if (localRotation >= 0 && localRotation < 25) {
             return colorize("+Z");
         } else {
-            return colorize(translationManager.get("directions.unknown"));
+            return colorize(translationManager.getString("directions.unknown"));
         }
     }
 
