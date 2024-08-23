@@ -1,13 +1,11 @@
 package net.zapp.coordinator.helper;
 
-import net.zapp.coordinator.Coordinator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Map;
 
 import static net.zapp.coordinator.Coordinator.*;
 import static net.zapp.coordinator.helper.GUIHelper.itemWithData;
@@ -19,14 +17,12 @@ public class GUISettingHandling {
 
         int state = 0;
 
-        Map<String, Integer> config = Coordinator.playerConfig.get(sender.getUniqueId());
-
         for (int i = 0; i < 27; i++) {
             String key = keys[i];
             String parentKey = key;
             String type = structureManager.get(key + ".type");
             if (type.equals("two_state_switch") || type.equals("two_state_roll")) {
-                state = config.get(structureManager.get(key + ".change"));
+                state = playerSettingDatabase.getIntStatement(sender, structureManager.get(key + ".change"));
                 if (state == 0) {
                     key = formatKey(structureManager.get(key + ".sub_1"));
                 } else {
@@ -34,7 +30,7 @@ public class GUISettingHandling {
                 }
             }
             if (type.equals("three_state_roll")) {
-                state = config.get(structureManager.get(key + ".change"));
+                state = playerSettingDatabase.getIntStatement(sender, structureManager.get(key + ".change"));
                 if (state == 0) {
                     key = formatKey(structureManager.get(key + ".sub_1"));
                 } else if (state == 1) {

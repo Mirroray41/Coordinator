@@ -10,6 +10,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
 public class PlayerJoinHandler implements Listener {
     public PlayerJoinHandler(Coordinator plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -17,6 +20,8 @@ public class PlayerJoinHandler implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        Logger logger = Bukkit.getLogger();
+
         Player player = event.getPlayer();
 
         BossBar bossBar = Bukkit.createBossBar("", BarColor.WHITE, BarStyle.SOLID);
@@ -27,5 +32,7 @@ public class PlayerJoinHandler implements Listener {
         if (!Coordinator.playerConfig.containsKey(player.getUniqueId())) {
             Coordinator.playerConfig.put(player.getUniqueId(), Coordinator.defaultConfig);
         }
+
+        Coordinator.playerSettingDatabase.addPlayer(player);
     }
 }

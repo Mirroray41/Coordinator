@@ -9,7 +9,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,36 +52,34 @@ public class BossBarRunnable extends BukkitRunnable {
                 continue;
             }
 
-            Map<String, Integer> config = playerConfig.get(player.getUniqueId());
-
-            if(config.get("visibility") == 0 || plugin.getConfig().getBoolean("hotbar")) {
+            if(!playerSettingDatabase.getVisibility(player) || plugin.getConfig().getBoolean("hotbar")) {
                 bossBar.setVisible(false);
-                if (config.get("visibility") == 0) continue;
+                if (!playerSettingDatabase.getVisibility(player)) continue;
             } else {
                 bossBar.setVisible(true);
             }
 
-            if (config.get("direction_type") == 0) {
+            if (playerSettingDatabase.getDirectionType(player) == 0) {
                 direction = getProperDirection(player.getLocation().getYaw());
-            } else if (config.get("direction_type") == 1) {
+            } else if (playerSettingDatabase.getDirectionType(player) == 1) {
                 direction = getProperDirectionPrediction(player.getLocation().getYaw());
             } else {
                 direction = getProperDirection(player.getLocation().getYaw()) + " " + getProperDirectionPrediction(player.getLocation().getYaw());
             }
 
-            x = config.get("location_type") == 0 ? getFormattedLocation((float) player.getLocation().getX()) : getFormattedLocation2((float) player.getLocation().getX());
-            y = config.get("location_type") == 0 ? getFormattedLocation((float) player.getLocation().getY()) : getFormattedLocation2((float) player.getLocation().getY());
-            z = config.get("location_type") == 0 ? getFormattedLocation((float) player.getLocation().getZ()) : getFormattedLocation2((float) player.getLocation().getZ());
-            minutes = config.get("time_type") == 0 ? gameMinutes : realTimeMinutes;
-            hours = config.get("time_type") == 0 ? gameHours : realTimeHours;
+            x = playerSettingDatabase.getLocationType(player) == 0 ? getFormattedLocation((float) player.getLocation().getX()) : getFormattedLocation2((float) player.getLocation().getX());
+            y = playerSettingDatabase.getLocationType(player) == 0 ? getFormattedLocation((float) player.getLocation().getY()) : getFormattedLocation2((float) player.getLocation().getY());
+            z = playerSettingDatabase.getLocationType(player) == 0 ? getFormattedLocation((float) player.getLocation().getZ()) : getFormattedLocation2((float) player.getLocation().getZ());
+            minutes = playerSettingDatabase.getTimeType(player) == 0 ? gameMinutes : realTimeMinutes;
+            hours = playerSettingDatabase.getTimeType(player) == 0 ? gameHours : realTimeHours;
 
 
 
             String assembledTitle = translationManager.get("bossbar")
-                    .replace("{x}", config.get("location") == 1 ? String.valueOf(x) : "")
-                    .replace("{y}", config.get("location") == 1 ? String.valueOf(y) : "")
-                    .replace("{z}", config.get("location") == 1 ? String.valueOf(z) : "")
-                    .replace("{direction}", config.get("direction") == 1 ? direction : "");
+                    .replace("{x}", playerSettingDatabase.getLocation(player) ? x : "")
+                    .replace("{y}", playerSettingDatabase.getLocation(player) ? y : "")
+                    .replace("{z}", playerSettingDatabase.getLocation(player) ? z : "")
+                    .replace("{direction}", playerSettingDatabase.getDirection(player) ? direction : "");
 
 
             String patternStr = "\\{HH\\}(.*?)\\{MM\\}";
@@ -92,11 +89,11 @@ public class BossBarRunnable extends BukkitRunnable {
 
             if (matcher.find()) {
                 String matchedGroup = matcher.group(1);
-                assembledTitle =  assembledTitle.replace(matchedGroup, config.get("time") == 1 ? matchedGroup : "");
+                assembledTitle =  assembledTitle.replace(matchedGroup, playerSettingDatabase.getTime(player) ? matchedGroup : "");
             }
 
-            assembledTitle = assembledTitle.replace("{HH}", config.get("time") == 1 ? hours : "")
-                    .replace("{MM}", config.get("time") == 1 ? minutes : "");
+            assembledTitle = assembledTitle.replace("{HH}", playerSettingDatabase.getTime(player) ? hours : "")
+                    .replace("{MM}", playerSettingDatabase.getTime(player) ? minutes : "");
 
             bossBar.setColor(getColorFromYaw(player.getLocation().getYaw()));
             bossBar.setTitle(colorize(assembledTitle));
@@ -108,7 +105,7 @@ public class BossBarRunnable extends BukkitRunnable {
             }
 
             if (plugin.getConfig().getBoolean("hotbar")) {
-                if (config.get("visibility") == 1) {
+                if (playerSettingDatabase.getTime(player)) {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
                             ChatColor.valueOf(getColorFromYaw(player.getLocation().getYaw()).toString()) + colorize(assembledTitle)));
                 }

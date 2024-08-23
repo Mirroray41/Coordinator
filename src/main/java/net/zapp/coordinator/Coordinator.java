@@ -3,6 +3,7 @@ package net.zapp.coordinator;
 import net.zapp.coordinator.commands.CrCommand;
 import net.zapp.coordinator.config_managers.StructureManager;
 import net.zapp.coordinator.config_managers.TranslationManager;
+import net.zapp.coordinator.database.PlayerSettingDatabase;
 import net.zapp.coordinator.handlers.ContainerHandler;
 import net.zapp.coordinator.handlers.PlayerJoinHandler;
 import net.zapp.coordinator.handlers.PlayerLeaveHandler;
@@ -15,6 +16,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -45,6 +47,8 @@ public final class Coordinator extends JavaPlugin {
 
     public static FileConfiguration config;
 
+    public static PlayerSettingDatabase playerSettingDatabase;
+
     private static PlayerSettingManager playerSettingManager;
     public static TranslationManager translationManager;
     public static StructureManager structureManager;
@@ -70,6 +74,26 @@ public final class Coordinator extends JavaPlugin {
 
         saveDefaultConfig();
         reloadConfig();
+
+        try {
+            if (!getDataFolder().exists()) {
+                getDataFolder().mkdirs();
+            }
+
+            playerSettingDatabase = new PlayerSettingDatabase(getDataFolder().getAbsolutePath() + "/player_settings.db",
+                    getConfig().getBoolean("default_settings.visibility.is_visible"),
+                    getConfig().getBoolean("default_settings.location.is_visible"),
+                    getConfig().getInt("default_settings.location.default_type"),
+                    getConfig().getBoolean("default_settings.direction.is_visible"),
+                    getConfig().getInt("default_settings.direction.default_type"),
+                    getConfig().getBoolean("default_settings.time.is_visible"),
+                    getConfig().getInt("default_settings.time.default_type"));
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            logger.warning("failed to connect to sqlite database with player settings");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
         playerSettingManager = new PlayerSettingManager(plugin, "player_settings.yml");
         translationManager = new TranslationManager(plugin, "translations.yml");
@@ -124,6 +148,11 @@ public final class Coordinator extends JavaPlugin {
     @Override
     public void onDisable() {
         flushSettingsToFile();
+        try {
+            playerSettingDatabase.closeConnection();
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void flushSettingsToFile() {
