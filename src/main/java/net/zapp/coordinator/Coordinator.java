@@ -1,13 +1,11 @@
 package net.zapp.coordinator;
 
 import net.zapp.coordinator.commands.CrCommand;
-import net.zapp.coordinator.config_managers.StructureManager;
-import net.zapp.coordinator.config_managers.TranslationManager;
+import net.zapp.coordinator.config_managers.*;
 import net.zapp.coordinator.database.PlayerSettingDatabase;
 import net.zapp.coordinator.handlers.ContainerHandler;
 import net.zapp.coordinator.handlers.PlayerJoinHandler;
 import net.zapp.coordinator.handlers.PlayerLeaveHandler;
-import net.zapp.coordinator.config_managers.PlayerSettingManager;
 import net.zapp.coordinator.papi.CoordinatorExpansion;
 import net.zapp.coordinator.runnable.BossBarRunnable;
 import org.bukkit.Bukkit;
@@ -47,11 +45,12 @@ public final class Coordinator extends JavaPlugin {
 
     public static FileConfiguration config;
 
+    private static YamlConfigManager playerSettingManager;
+    public static TranslationManagerNew translationManager;
+    public static YamlConfigManager structureManager;
+
     public static PlayerSettingDatabase playerSettingDatabase;
 
-    private static PlayerSettingManager playerSettingManager;
-    public static TranslationManager translationManager;
-    public static StructureManager structureManager;
 
     @Override
     public void onEnable() {
@@ -75,6 +74,11 @@ public final class Coordinator extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
 
+
+        playerSettingManager = new YamlConfigManager(plugin, "player_settings.yml");
+        translationManager = new TranslationManagerNew(plugin, "translations.yml");
+        structureManager = new YamlConfigManager(plugin, "gui_structure.yml");
+
         try {
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdirs();
@@ -95,9 +99,6 @@ public final class Coordinator extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
-        playerSettingManager = new PlayerSettingManager(plugin, "player_settings.yml");
-        translationManager = new TranslationManager(plugin, "translations.yml");
-        structureManager = new StructureManager(plugin, "gui_structure.yml");
 
 
         if (getConfig().getInt("file_format") != CONFIG_VERSION) {
@@ -188,6 +189,9 @@ public final class Coordinator extends JavaPlugin {
 
     public static void reload() {
         plugin.reloadConfig();
+        translationManager.reload(plugin);
+        structureManager.reload(plugin);
+        playerSettingManager.reload(plugin);
         timeOffset = plugin.getConfig().getInt("time_offset");
         defaultConfig = new HashMap() {{
             put("visibility", plugin.getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);

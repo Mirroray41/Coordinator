@@ -33,7 +33,7 @@ public class CrCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings ) {
         if ((strings.length == 0 || strings[0].equals("menu"))&& sender.hasPermission("cr.use")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(colorize(translationManager.get("errors.cr_command_run_by_non_player")));
+                sender.sendMessage(colorize(translationManager.getString("errors.cr_command_run_by_non_player")));
                 return false;
             }
 
@@ -42,16 +42,14 @@ public class CrCommand implements CommandExecutor, TabCompleter {
         }
         if (strings.length != 0) {
             if (strings[0].equals("reload") && sender.hasPermission("cr.reload")) {
-                sender.sendMessage(colorize(translationManager.get("translations.info.cr_command_reload")));
+                sender.sendMessage(colorize(translationManager.getString("translations.info.cr_command_reload")));
                 reload();
-                translationManager.reloadLang();
-                structureManager.reloadStructure();
                 return true;
             } else if (strings[0].equals("set") && sender.hasPermission("cr.set")) {
                 Map<String, Integer> config;
                 Player player = getPlayerFromCommand(strings, sender);
                 if (player == null) {
-                    sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_missing_player")));
+                    sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_missing_player")));
                     return false;
                 }
                 config = Coordinator.playerConfig.get((player.getUniqueId()));
@@ -65,20 +63,20 @@ public class CrCommand implements CommandExecutor, TabCompleter {
                             config.replace(strings[2], Integer.valueOf(strings[3]));
                         }
                     } else {
-                        sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_incorrect_parameter")));
+                        sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_incorrect_parameter")));
                     }
                 }
                 Coordinator.playerConfig.replace(player.getUniqueId(), config);
                 return true;
             } else if (strings[0].equals("get") && sender.hasPermission("cr.get")) {
                 if (strings.length == 1) {
-                    sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_wrong_arguments")));
+                    sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_wrong_arguments")));
                     return false;
                 }
                 Map<String, Integer> config;
                 Player player = getPlayerFromCommand(strings, sender);
                 if (player == null) {
-                    sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_missing_player")));
+                    sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_missing_player")));
                     return false;
                 }
                 config = Coordinator.playerConfig.get((player.getUniqueId()));
@@ -95,7 +93,7 @@ public class CrCommand implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        sender.sendMessage(colorize(translationManager.get("translations.errors.cr_command_wrong_arguments")));
+        sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_wrong_arguments")));
         return false;
     }
 
@@ -135,12 +133,12 @@ public class CrCommand implements CommandExecutor, TabCompleter {
     }
 
     private static void prepMenu(Player sender) {
-        Inventory chestGui = Bukkit.createInventory(null, 27, colorize(translationManager.get("translations.gui.title")));
+        Inventory chestGui = Bukkit.createInventory(null, 27, colorize(translationManager.getString("translations.gui.title")));
 
 
 
         for (int i = 0; i < 27; i++) {
-            chestGui.setItem(i, itemWithData(new ItemStack(Material.valueOf(structureManager.get("l.material")), 1), colorize(translationManager.get(structureManager.get("l.name")))));
+            chestGui.setItem(i, itemWithData(new ItemStack(Material.valueOf(structureManager.getString("l.material")), 1), colorize(translationManager.getString(structureManager.getString("l.name")))));
         }
 
         syncGUI(sender, chestGui);

@@ -24,7 +24,7 @@ public class ContainerHandler implements Listener {
 
     @EventHandler
     public void onContainerInteract(InventoryClickEvent event) {
-        if (event.getView().getTitle().equals(colorize(translationManager.get("translations.gui.title")))) {
+        if (event.getView().getTitle().equals(colorize(translationManager.getString("translations.gui.title")))) {
             event.setCancelled(true);
             int slot = event.getSlot();
             Map<String, Integer> config = Coordinator.playerConfig.get(event.getWhoClicked().getUniqueId());
