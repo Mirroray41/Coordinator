@@ -17,7 +17,6 @@ public class YamlConfigManager {
         reload(plugin);
     }
 
-
     public Object get(String path) {
         Object obj = config.get(path);
         if (obj == null) {

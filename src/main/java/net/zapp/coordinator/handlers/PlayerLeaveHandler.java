@@ -19,7 +19,5 @@ public class PlayerLeaveHandler implements Listener {
 
         Coordinator.playerBossBars.remove(player.getUniqueId());
         BossBarRunnable.BossBarMap.remove(player.getUniqueId());
-
-        Coordinator.flushSettingsToFile();
     }
 }

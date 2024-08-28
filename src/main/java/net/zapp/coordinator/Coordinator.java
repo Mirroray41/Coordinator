@@ -45,7 +45,6 @@ public final class Coordinator extends JavaPlugin {
 
     public static FileConfiguration config;
 
-    private static YamlConfigManager playerSettingManager;
     public static TranslationManagerNew translationManager;
     public static YamlConfigManager structureManager;
 
@@ -74,8 +73,6 @@ public final class Coordinator extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
 
-
-        playerSettingManager = new YamlConfigManager(plugin, "player_settings.yml");
         translationManager = new TranslationManagerNew(plugin, "translations.yml");
         structureManager = new YamlConfigManager(plugin, "gui_structure.yml");
 
@@ -106,14 +103,14 @@ public final class Coordinator extends JavaPlugin {
             logger.warning("Coordinator requires config file format version " + CONFIG_VERSION + ", your current file format version is " + getConfig().getInt("file_format"));
             Bukkit.getPluginManager().disablePlugin(this);
         }
-        if (!Objects.equals(translationManager.get("file_format"), String.valueOf(TRANSLATIONS_VERSION))) {
+        if (translationManager.getInt("file_format") != TRANSLATIONS_VERSION) {
             logger.warning("Incorrect config format, check for changes on the official github page");
-            logger.warning("Coordinator requires translations file format version " + TRANSLATIONS_VERSION + ", your current file format version is " + translationManager.get("file_format"));
+            logger.warning("Coordinator requires translations file format version " + TRANSLATIONS_VERSION + ", your current file format version is " + translationManager.getInt("file_format"));
             Bukkit.getPluginManager().disablePlugin(this);
         }
-        if (!Objects.equals(structureManager.get("file_format"), String.valueOf(STRUCTURE_VERSION))) {
+        if (structureManager.getInt("file_format") != STRUCTURE_VERSION) {
             logger.warning("Incorrect structure format, check for changes on the official github page");
-            logger.warning("Coordinator requires gui_structure file format version " + STRUCTURE_VERSION + ", your current file format version is " + structureManager.get("file_format"));
+            logger.warning("Coordinator requires gui_structure file format version " + STRUCTURE_VERSION + ", your current file format version is " + structureManager.getInt("file_format"));
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
@@ -124,18 +121,7 @@ public final class Coordinator extends JavaPlugin {
 
         timeOffset = getConfig().getInt("time_offset");
 
-        defaultConfig = new HashMap() {{
-            put("visibility", getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
-            put("location_type", getConfig().getInt("default_settings.location.default_type"));
-            put("location", getConfig().getBoolean("default_settings.location.is_visible") ? 1 : 0);
-            put("direction_type", getConfig().getInt("default_settings.direction.default_type"));
-            put("direction", getConfig().getBoolean("default_settings.direction.is_visible") ? 1 : 0);
-            put("time_type", getConfig().getInt("default_settings.time.default_type"));
-            put("time", getConfig().getBoolean("default_settings.time.is_visible") ? 1 : 0);
-        }};
 
-
-        playerConfig = playerSettingManager.convertYamlToMap(playerSettingManager.customConfigFile);
 
         Objects.requireNonNull(this.getCommand("cr")).setExecutor(new CrCommand());
         Objects.requireNonNull(this.getCommand("cr")).setTabCompleter(new CrCommand());
@@ -148,7 +134,6 @@ public final class Coordinator extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        flushSettingsToFile();
         try {
             playerSettingDatabase.closeConnection();
         }catch (SQLException ex) {
@@ -156,11 +141,7 @@ public final class Coordinator extends JavaPlugin {
         }
     }
 
-    public static void flushSettingsToFile() {
-        for (Map.Entry<UUID, Map<String, Integer>> entry : playerConfig.entrySet()) {
-            playerSettingManager.set(String.valueOf(entry.getKey()), entry.getValue());
-        }
-    }
+
 
     public static String colorize(String msg) {
         return hex(msg.replace("&", "§"));
@@ -191,17 +172,6 @@ public final class Coordinator extends JavaPlugin {
         plugin.reloadConfig();
         translationManager.reload(plugin);
         structureManager.reload(plugin);
-        playerSettingManager.reload(plugin);
         timeOffset = plugin.getConfig().getInt("time_offset");
-        defaultConfig = new HashMap() {{
-            put("visibility", plugin.getConfig().getBoolean("default_settings.visibility.is_visible") ? 1 : 0);
-            put("location_type", plugin.getConfig().getInt("default_settings.location.default_type"));
-            put("location", plugin.getConfig().getBoolean("default_settings.location.is_visible") ? 1 : 0);
-            put("direction_type", plugin.getConfig().getInt("default_settings.direction.default_type"));
-            put("direction", plugin.getConfig().getBoolean("default_settings.direction.is_visible") ? 1 : 0);
-            put("time_type", plugin.getConfig().getInt("default_settings.time.default_type"));
-            put("time", plugin.getConfig().getBoolean("default_settings.time.is_visible") ? 1 : 0);
-        }};
     }
-
 }

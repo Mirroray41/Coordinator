@@ -1,14 +1,16 @@
-package net.zapp.coordinator.helper;
+package net.zapp.coordinator.gui;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
 import static net.zapp.coordinator.Coordinator.*;
-import static net.zapp.coordinator.helper.GUIHelper.itemWithData;
 
 public class GUISettingHandling {
     public static void syncGUI(Player sender, Inventory chestGUI) {
@@ -22,7 +24,7 @@ public class GUISettingHandling {
             String parentKey = key;
             String type = structureManager.getString(key + ".type");
             if (type.equals("two_state_switch") || type.equals("two_state_roll")) {
-                state = playerSettingDatabase.getIntStatement(sender, structureManager.get(key + ".change"));
+                state = playerSettingDatabase.getIntStatement(sender, structureManager.getString(key + ".change"));
                 if (state == 0) {
                     key = formatKey(structureManager.getString(key + ".sub_1"));
                 } else {
@@ -30,7 +32,7 @@ public class GUISettingHandling {
                 }
             }
             if (type.equals("three_state_roll")) {
-                state = playerSettingDatabase.getIntStatement(sender, structureManager.get(key + ".change"));
+                state = playerSettingDatabase.getIntStatement(sender, structureManager.getString(key + ".change"));
                 if (state == 0) {
                     key = formatKey(structureManager.getString(key + ".sub_1"));
                 } else if (state == 1) {
@@ -52,16 +54,16 @@ public class GUISettingHandling {
         List<String> lore = new java.util.ArrayList<>();
         if (!structureManager.getString(childKey + ".lore").isEmpty()) {
             for (String loreKey: loreKeys) {
-                lore.add(translationManager.getString(loreKey));
+                lore.add(translationManager.getStringWithReplace(loreKey));
             }
         }
 
         switch (type) {
             case "static":
-                name =  structureManager.getString(childKey + ".name");
+                name = structureManager.getString(childKey + ".name");
                 break;
             case "static_translatable":
-                name = translationManager.getString(structureManager.getString(childKey + ".name"));
+                name = translationManager.getStringWithReplace(structureManager.getString(childKey + ".name"));
                 break;
             default:
                 name = " ";
@@ -107,13 +109,13 @@ public class GUISettingHandling {
 
         if (structureManager.has(parentKey + ".change")) {
             if (structureManager.getString(parentKey + ".change").equals("visibility")) {
-                name = (config.getBoolean("globals.visibility.is_enabled") ? "" : translationManager.getString("translations.gui.disabled")) + name;
+                name = (config.getBoolean("globals.visibility.is_enabled") ? "" : translationManager.getStringWithReplace("translations.gui.disabled")) + name;
             } else if (structureManager.getString(parentKey + ".change").equals("direction")) {
-                name = (config.getBoolean("globals.direction.is_enabled") ? "" : translationManager.getString("translations.gui.disabled")) + name;
+                name = (config.getBoolean("globals.direction.is_enabled") ? "" : translationManager.getStringWithReplace("translations.gui.disabled")) + name;
             } else if (structureManager.getString(parentKey + ".change").equals("location")) {
-                name = (config.getBoolean("globals.location.is_enabled") ? "" : translationManager.getString("translations.gui.disabled")) + name;
+                name = (config.getBoolean("globals.location.is_enabled") ? "" : translationManager.getStringWithReplace("translations.gui.disabled")) + name;
             } else if (structureManager.getString(parentKey + ".change").equals("time")) {
-                name = (config.getBoolean("globals.time.is_enabled") ? "" : translationManager.getString("translations.gui.disabled")) + name;
+                name = (config.getBoolean("globals.time.is_enabled") ? "" : translationManager.getStringWithReplace("translations.gui.disabled")) + name;
             }
         }
 
@@ -129,4 +131,19 @@ public class GUISettingHandling {
     protected static String formatKey(String key) {
         return key.replace("{", "").replace("}", "");
     }
+
+    public static ItemStack itemWithData(ItemStack stack, String name, List<String> lore, boolean isEnchanted) {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            meta.setLore(lore);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+        stack.setItemMeta(meta);
+        if (isEnchanted) {
+            stack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        }
+        return stack;
+    }
+    
 }

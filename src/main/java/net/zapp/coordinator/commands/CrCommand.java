@@ -10,6 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,16 +19,17 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static net.zapp.coordinator.Coordinator.*;
-import static net.zapp.coordinator.helper.GUIHelper.itemWithData;
-import static net.zapp.coordinator.helper.GUISettingHandling.syncGUI;
+import static net.zapp.coordinator.gui.GUISettingHandling.syncGUI;
 
 public class CrCommand implements CommandExecutor, TabCompleter {
     private static final String[] FIRST = {"menu", "set", "get", "reload"};
     private static final String[] SET_1 = {"defaults"};
     private static final String[] SET_2 = {"default"};
-    private static final String[] INT_OPTIONS = {"0", "1", "2"};
+    private static final String[] INT_SETTINGS = {"0", "1", "2"};
+    private static final String[] BOOL_SETTINGS = {"true", "false"};
 
     private static final String[] OPTIONS = {"visibility", "location", "direction", "time", "location_type", "direction_type", "time_type"};
+    private static final String[] BOOL_OPTIONS = {"visibility", "location", "direction", "time"};
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings ) {
@@ -46,49 +48,60 @@ public class CrCommand implements CommandExecutor, TabCompleter {
                 reload();
                 return true;
             } else if (strings[0].equals("set") && sender.hasPermission("cr.set")) {
-                Map<String, Integer> config;
                 Player player = getPlayerFromCommand(strings, sender);
                 if (player == null) {
                     sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_missing_player")));
                     return false;
                 }
-                config = Coordinator.playerConfig.get((player.getUniqueId()));
                 if(strings[1].equals("defaults") || strings[2].equals("defaults")) {
-                    config = defaultConfig;
+                    playerSettingDatabase.setDefault(player, "visibility");
+                    playerSettingDatabase.setDefault(player, "location");
+                    playerSettingDatabase.setDefault(player, "location_type");
+                    playerSettingDatabase.setDefault(player, "direction");
+                    playerSettingDatabase.setDefault(player, "direction_type");
+                    playerSettingDatabase.setDefault(player, "time");
+                    playerSettingDatabase.setDefault(player, "time_type");
                 } else {
                     if (Arrays.asList(OPTIONS).contains(strings[2])) {
                         if (strings[3].equals("default")){
-                            config.replace(strings[2], defaultConfig.get(strings[2]));
+                            playerSettingDatabase.setDefault(player, strings[2]);
                         } else {
-                            config.replace(strings[2], Integer.valueOf(strings[3]));
+                            if (Arrays.asList(BOOL_OPTIONS).contains((strings[2]))){
+                                playerSettingDatabase.setBoolStatement(player, strings[3].equals("true"), strings[2]);
+                            } else {
+                                playerSettingDatabase.setIntStatement(player, Integer.parseInt(strings[3]), strings[2]);
+                            }
                         }
                     } else {
                         sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_incorrect_parameter")));
                     }
                 }
-                Coordinator.playerConfig.replace(player.getUniqueId(), config);
                 return true;
             } else if (strings[0].equals("get") && sender.hasPermission("cr.get")) {
                 if (strings.length == 1) {
                     sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_wrong_arguments")));
                     return false;
                 }
-                Map<String, Integer> config;
                 Player player = getPlayerFromCommand(strings, sender);
                 if (player == null) {
                     sender.sendMessage(colorize(translationManager.getString("translations.errors.cr_command_missing_player")));
                     return false;
                 }
-                config = Coordinator.playerConfig.get((player.getUniqueId()));
                 if (strings.length == 2) {
-                    sender.sendMessage(config.toString()
-                            .replace("{", "")
-                            .replace("}", "")
-                            .replace("=", " = ")
-                            .replace(", ", "\n"));
+                    sender.sendMessage("Visibility: " + playerSettingDatabase.getVisibility(player) +
+                            "\nLocation: " + playerSettingDatabase.getLocation(player) +
+                            "\nLocation Type: " + playerSettingDatabase.getLocationType(player) +
+                            "\nDirection: " + playerSettingDatabase.getDirection(player) +
+                            "\nDirection Type: " + playerSettingDatabase.getDirectionType(player) +
+                            "\nTime: " + playerSettingDatabase.getTime(player) +
+                            "\nTime Type: " + playerSettingDatabase.getTimeType(player));
                     return true;
                 } else if (Arrays.asList(OPTIONS).contains(strings[2])) {
-                    sender.sendMessage(strings[2] + " = " + config.get(strings[2]));
+                    if (Arrays.asList(BOOL_OPTIONS).contains((strings[2]))) {
+                        sender.sendMessage(strings[2] + ": " + playerSettingDatabase.getBoolStatement(player, strings[2]));
+                    } else {
+                        sender.sendMessage(strings[2] + ": " + playerSettingDatabase.getIntStatement(player, strings[2]));
+                    }
                     return true;
                 }
             }
@@ -119,9 +132,12 @@ public class CrCommand implements CommandExecutor, TabCompleter {
             completions = concat(completions, Arrays.asList(SET_1));
         } else if (strings.length == 3 && strings[0].equals("get")) {
             completions = Arrays.asList(OPTIONS);
-        } else if (strings.length == 4 && strings[0].equals("set") && !strings[1].equals("defaults") && !strings[2].equals("defaults")) {
+        } else if (strings.length == 4 && strings[0].equals("set") && !strings[1].equals("defaults") && !strings[2].equals("defaults") && !Arrays.asList(BOOL_OPTIONS).contains((strings[2]))) {
             completions = Arrays.asList(SET_2);
-            completions = concat(completions, Arrays.asList(INT_OPTIONS));
+            completions = concat(completions, Arrays.asList(INT_SETTINGS));
+        }else if (strings.length == 4 && strings[0].equals("set") && !strings[1].equals("defaults") && !strings[2].equals("defaults") && Arrays.asList(BOOL_OPTIONS).contains((strings[2]))) {
+            completions = Arrays.asList(SET_2);
+            completions = concat(completions, Arrays.asList(BOOL_SETTINGS));
         }
 
 
@@ -160,5 +176,15 @@ public class CrCommand implements CommandExecutor, TabCompleter {
             player = (Player) sender;
         }
         return player;
+    }
+
+
+    public static ItemStack itemWithData(ItemStack stack, String name) {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+        }
+        stack.setItemMeta(meta);
+        return stack;
     }
 }

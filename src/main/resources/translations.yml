@@ -20,14 +20,14 @@ translations:
     location:
       switch_label: "&fLocation Switch: {state}"
       switch_tooltip: "&7Switch to hide or show the location of the player"
-      type_selector_label: "Location Type:"
+      type_selector_label: "&fLocation Type:"
       type_selection_1: "{select_state} Whole rounded coordinates"
       type_selection_2: "{select_state} Round to 2 decimal places"
 
     direction:
       switch_label: "&fDirection Switch: {state}"
       switch_tooltip: "&7Switch to hide or show the direction the player is facing"
-      type_selector_label: "Direction Type:"
+      type_selector_label: "&fDirection Type:"
       type_selection_1: "{select_state} Cardinal direction"
       type_selection_2: "{select_state} Coordinate direction"
       type_selection_3: "{select_state} Both"
@@ -35,7 +35,7 @@ translations:
     time:
       switch_label: "&fTime Switch: {state}"
       switch_tooltip: "&7Switch to hide or show the time"
-      type_selector_label: "Time Type:"
+      type_selector_label: "&fTime Type:"
       type_selection_1: "{select_state} In-game time"
       type_selection_2: "{select_state} Real time"
 

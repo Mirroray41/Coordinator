@@ -20,7 +20,6 @@ public class PlayerJoinHandler implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Logger logger = Bukkit.getLogger();
 
         Player player = event.getPlayer();
 

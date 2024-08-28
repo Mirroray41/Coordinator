@@ -11,11 +11,29 @@ public class PlayerSettingDatabase {
 
     Logger logger = Bukkit.getLogger();
 
+    private boolean visibilityDefault;
+    private boolean locationDefault;
+    private int locationTypeDefault;
+    private boolean directionDefault;
+    private int directionTypeDefault;
+    private boolean timeDefault;
+    private int timeTypeDefault;
+
     public PlayerSettingDatabase(String path,
                                  boolean visibilityDefault,
                                  boolean locationDefault, int locationTypeDefault,
                                  boolean directionDefault, int directionTypeDefault,
                                  boolean timeDefault, int timeTypeDefault) throws SQLException {
+        this.visibilityDefault = visibilityDefault;
+        this.locationDefault = locationDefault;
+        this.locationTypeDefault = locationTypeDefault;
+        this.directionDefault = directionDefault;
+        this.directionTypeDefault = directionTypeDefault;
+        this.timeDefault = timeDefault;
+        this.timeTypeDefault = timeTypeDefault;
+
+        logger.info(visibilityDefault + " " + locationDefault + " " +  locationTypeDefault + " " +  directionDefault + " " +  directionTypeDefault + " " +  timeDefault + " " +  timeTypeDefault);
+
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS players (" +
@@ -92,8 +110,7 @@ public class PlayerSettingDatabase {
         }
     }
 
-    protected void setIntStatement(Player player, int value, String statement){
-
+    public void setIntStatement(Player player, int value, String statement){
         if (!playerExists(player)){
             addPlayer(player);
         }
@@ -108,8 +125,32 @@ public class PlayerSettingDatabase {
         }
     }
 
-    protected void setBoolStatement(Player player, boolean value, String statement){
+    public void setDefault(Player player, String statement) {
+        if (!playerExists(player)){
+            addPlayer(player);
+        }
 
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE players SET " + statement + " = ? WHERE uuid = ?")) {
+            logger.info(visibilityDefault + " " + locationDefault + " " +  locationTypeDefault + " " +  directionDefault + " " +  directionTypeDefault + " " +  timeDefault + " " +  timeTypeDefault);
+            switch (statement) {
+                case "visibility": preparedStatement.setBoolean(1, true); break;
+                case "location": preparedStatement.setBoolean(1, locationDefault); break;
+                case "location_type": preparedStatement.setInt(1, locationTypeDefault); break;
+                case "direction": preparedStatement.setBoolean(1, directionDefault); break;
+                case "direction_type": preparedStatement.setInt(1, directionTypeDefault); break;
+                case "time": preparedStatement.setBoolean(1, timeDefault); break;
+                case "time_type": preparedStatement.setInt(1, timeTypeDefault); break;
+            }
+            preparedStatement.setString(2, player.getUniqueId().toString());
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            logger.warning("Failed to change setting of player: " + player + ". Please report this to the author");
+            ex.printStackTrace();
+        }
+    }
+
+
+    public void setBoolStatement(Player player, boolean value, String statement){
         if (!playerExists(player)){
             addPlayer(player);
         }
