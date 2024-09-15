@@ -31,8 +31,8 @@ public class BossBarRunnable extends BukkitRunnable {
             String direction;
             String hours;
             String minutes;
-            String gameMinutes = timeIntToString(getMinutesFromGameTime(getAjustedGameTime(getServer().getWorld("world").getTime())));
-            String gameHours = timeIntToString(getHoursFromGameTime(getAjustedGameTime(getServer().getWorld("world").getTime())));
+            String gameMinutes = timeIntToString(getMinutesFromGameTime(getAjustedGameTime(player.getWorld().getTime())));
+            String gameHours = timeIntToString(getHoursFromGameTime(getAjustedGameTime(player.getWorld().getTime())));
 
 
             OffsetDateTime realWorldTimeMillis = OffsetDateTime.now();
